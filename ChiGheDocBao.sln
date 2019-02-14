@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "ChiGheDocBao", "ChiGheDocBao\ChiGheDocBao.fsproj", "{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}.Release|iPhone.ActiveCfg = Release|iPhone
+		{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}.Release|iPhone.Build.0 = Release|iPhone
+		{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}.Debug|iPhone.Build.0 = Debug|iPhone
+	EndGlobalSection
+EndGlobal
