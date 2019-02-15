@@ -71,7 +71,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="1700" height="232"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="300" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5824" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" verticalCompressionResistancePriority="800" text="Title">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="300" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5824" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" verticalCompressionResistancePriority="800" text="Title">
                                             <rect key="frame" x="316" y="8" width="1392" height="69"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                             <color key="textColor" colorSpace="calibratedRGB" red="0.57647058823529407" green="0.12549019607843137" blue="0.5725490196078431" alpha="1"/>

@@ -49,7 +49,7 @@ module tvOS =
     open Foundation
     open UIKit
     open Presenter
-    open ViewCategoryContent.tvOS
+    open ViewCategory.tvOS
 
     [<Register ("CategoryListView")>]
     type tvOSCategoryListView (handle : IntPtr) =

@@ -1,4 +1,4 @@
-﻿namespace ChiGheDocBao.ViewCategoryContent
+﻿namespace ChiGheDocBao.ViewCategory
 
 open ChiGheDocBao
 
@@ -20,37 +20,7 @@ module Domain =
     
     open FSharp.Data
 
-    type private XmlType = XmlProvider<"""<?xml version="1.0" encoding="UTF-8"?>
-        <rss version="2.0" xmlns:slash="http://purl.org/rss/1.0/modules/slash/">
-          <channel>
-            <title>Tin mới nhất - VnExpress RSS</title>
-            <description>VnExpress RSS</description>
-            <image>
-              <url>https://s.vnecdn.net/vnexpress/i/v20/logos/vne_logo_rss.png</url>
-              <title>Tin nhanh VnExpress - Đọc báo, tin tức online 24h</title>
-              <link>https://vnexpress.net</link>
-            </image>
-            <pubDate>Fri, 08 Feb 2019 16:56:21 +0700</pubDate>
-            <generator>VnExpress</generator>
-            <link>https://vnexpress.net/rss/tin-moi-nhat.rss</link>
-            <item>
-              <title>Trai làng hò hét dưới nắng rước hai quả pháo dài 6m</title>
-              <description><![CDATA[<a href="https://video.vnexpress.net/tin-tuc/thoi-su/trai-lang-ho-het-duoi-nang-ruoc-hai-qua-phao-dai-6m-3878858.html"><img width=130 height=100 src="https://i-vnexpress.vnecdn.net/2019/02/08/515081415431856661854617687951-1454-4903-1549616996_180x108.jpg" ></a></br>Hai quả pháo dài 5 - 6m được thanh niên trai tráng khỏe mạnh rước xung quang làng Đồng Kỵ, Từ Sơn (Bắc Ninh).]]></description>
-              <pubDate>Fri, 08 Feb 2019 16:09:56 +0700</pubDate>
-              <link>https://video.vnexpress.net/tin-tuc/thoi-su/trai-lang-ho-het-duoi-nang-ruoc-hai-qua-phao-dai-6m-3878858.html</link>
-              <guid>https://video.vnexpress.net/tin-tuc/thoi-su/trai-lang-ho-het-duoi-nang-ruoc-hai-qua-phao-dai-6m-3878858.html</guid>
-              <slash:comments>0</slash:comments>
-            </item>
-            <item>
-              <title>Phong tục đón Tết của người Triều Tiên</title>
-              <description><![CDATA[<a href="https://vnexpress.net/the-gioi/phong-tuc-don-tet-cua-nguoi-trieu-tien-3878866.html"><img width=130 height=100 src="https://i-vnexpress.vnecdn.net/2019/02/08/3-1549616779-6056-1549616899_180x108.jpg" ></a></br>Các gia đình Triều Tiên quây quần trong ngày đầu tiên của năm mới âm lịch, chúc tụng và dùng bữa ăn truyền thống.]]></description>
-              <pubDate>Fri, 08 Feb 2019 16:08:54 +0700</pubDate>
-              <link>https://vnexpress.net/the-gioi/phong-tuc-don-tet-cua-nguoi-trieu-tien-3878866.html</link>
-              <guid>https://vnexpress.net/the-gioi/phong-tuc-don-tet-cua-nguoi-trieu-tien-3878866.html</guid>
-              <slash:comments>0</slash:comments>
-            </item>
-          </channel>
-        </rss>""">
+    type private XmlType = XmlProvider<"types/tin-moi-nhat.rss">
 
     let private parseXml xmlString : Result<XmlType.Rss, string> =
         try
@@ -114,7 +84,7 @@ module Presenter =
         Description : string
         Image : Image option }
 
-    type CategoryContentView =
+    type CategoryView =
         abstract ShowLoadingMessage : string -> ((unit -> unit) -> unit)
         abstract ShowErrorMessage : string -> string -> (unit -> unit) -> unit
         abstract Back : unit -> unit
@@ -122,11 +92,11 @@ module Presenter =
         abstract OnThumbnailUpdated : unit -> unit
 
     [<AllowNullLiteral>]
-    type CategoryContentPresenter (categoryUrl : Url,
-                                   downloadArticleHeads : DownloadArticleHeads,
-                                   downloadThumbnails : DownloadThumbnails,
-                                   view : CategoryContentView,
-                                   runOnViewThread) =
+    type CategoryPresenter (categoryUrl : Url,
+                            downloadArticleHeads : DownloadArticleHeads,
+                            downloadThumbnails : DownloadThumbnails,
+                            view : CategoryView,
+                            runOnViewThread) =
 
         let hideLoadingMessage = view.ShowLoadingMessage "Chi ghẻ đang quậy, vui lòng chờ tí"
 
@@ -188,7 +158,7 @@ module tvOS =
         inherit UITableViewController (handle)
 
         let mutable category = Category.Dummy
-        let mutable presenter : CategoryContentPresenter = null
+        let mutable presenter : CategoryPresenter = null
 
         member this.Init cat =
             category <- cat
@@ -197,11 +167,11 @@ module tvOS =
             base.ViewDidLoad ()
 
             this.NavigationItem.Title <- category.Name
-            presenter <- CategoryContentPresenter (category.Url,
-                                                   downloadArticleHeads Common.Network.downloadString,
-                                                   downloadThumbnails cachedDownloadImage,
-                                                   this,
-                                                   this.InvokeOnMainThread)
+            presenter <- CategoryPresenter (category.Url,
+                                            downloadArticleHeads Common.Network.downloadString,
+                                            downloadThumbnails cachedDownloadImage,
+                                            this,
+                                            this.InvokeOnMainThread)
 
         override this.RowsInSection (tableView, section) =
             presenter.GetArticleHeadsCount () |> nint
@@ -231,7 +201,7 @@ module tvOS =
             if not (isNull presenter) then
                 presenter.OnBack ()
 
-        interface CategoryContentView with
+        interface CategoryView with
             member this.ShowLoadingMessage message =
                 showToast this message
 
