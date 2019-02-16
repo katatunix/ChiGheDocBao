@@ -1,22 +1,25 @@
 ﻿namespace ChiGheDocBao.ViewArticle
-
 open ChiGheDocBao
 
 module tvOS =
+
     open System
     open Foundation
     open UIKit
 
-    let test () =
+    let createWebView () =
+        let t = Type.GetType "UIKit.UIWebView"
+        Activator.CreateInstance(t)
 
-        let t = Type.GetType "WebKit.WKWebView"
-        let webview = Activator.CreateInstance(t) :?> WebKit.WKWebView
-        let x = WebKit.WKWebView ()
-        ()
+    [<Register ("ArticleView")>]
+    type tvOSArticleView (handle : IntPtr) =
+        inherit UIViewController (handle)
 
-    //[<Register ("CategoryContentView")>]
-    //type tvOSCategoryContentView (handle : IntPtr) =
-        //inherit UITableViewController (handle)
+        override this.ViewDidLoad () =
+            base.ViewDidLoad ()
+            Console.WriteLine "hehe"
+            //let webView = createWebView ()
+            Console.WriteLine "haha"
 
 //module Domain =
     //open Common.Domain

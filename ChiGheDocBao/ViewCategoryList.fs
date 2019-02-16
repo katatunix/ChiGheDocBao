@@ -1,8 +1,8 @@
 ﻿namespace ChiGheDocBao.ViewCategoryList
-
 open ChiGheDocBao
 
 module Domain =
+
     open Common.Domain
 
     let private cat n u = { Name = n; Url = Url u }
@@ -51,6 +51,7 @@ module Domain =
     let categories = vnexpress
 
 module Presenter =
+
     open Common.Domain
     open Domain
 
@@ -67,6 +68,7 @@ module Presenter =
             view.ShowCategoryContentView categories.[index]
 
 module tvOS =
+
     open System
     open Foundation
     open UIKit
