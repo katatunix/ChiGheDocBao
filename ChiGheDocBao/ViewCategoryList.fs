@@ -48,6 +48,10 @@ module Domain =
         cat "Doanh nghiệp" "http://docbao.vn/rss/export/doanh-nghiep.rss"
     |]
 
+    let tuoitre = [|
+        cat "Tin moi nhat" "https://tuoitre.vn/rss/tin-moi-nhat.rss"
+    |]
+
     let categories = vnexpress
 
 module Presenter =

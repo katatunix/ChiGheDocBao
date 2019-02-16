@@ -23,6 +23,8 @@ module Domain =
     open System.Text.RegularExpressions
 
     type private XmlType = XmlProvider<"types/tin-moi-nhat.rss">
+    //type private XmlType = XmlProvider<"https://tuoitre.vn/rss/tin-moi-nhat.rss">
+
 
     let private parseXml xmlString : Result<XmlType.Rss, string> =
         try
@@ -31,7 +33,7 @@ module Domain =
             Error <| "Invalid XML: " + ex.Message
 
     let private parseDescription description =
-        let pattern = """src="(.+)" /?></a></br>(.+)"""
+        let pattern = """src="(.+)" /?></a>(?:</br>)?(.+)"""
         let m = Regex.Match (description, pattern)
         if m.Success then
             let imageUrl = m.Groups.[1].Value
@@ -202,7 +204,8 @@ module tvOS =
             | None ->
                 cell.Thumbnail.Image <- null
 
-            cell.LayoutIfNeeded ()
+            //cell.LayoutIfNeeded ()
+            //cell.UpdateConstraintsIfNeeded ()
             cell :> UITableViewCell
 
         override this.GetCell (tableView, indexPath) =
@@ -228,7 +231,9 @@ module tvOS =
                 )
 
             member this.OnAhsUpdated () =
-                this.InvokeOnMainThread (fun _ -> this.TableView.ReloadData ())
+                this.InvokeOnMainThread (fun _ ->
+                    this.TableView.ReloadData ()
+                )
 
             member this.OnThumbnailUpdated _ =
                 this.InvokeOnMainThread (fun _ ->
