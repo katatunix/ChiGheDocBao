@@ -59,7 +59,7 @@
         </scene>
         <scene sceneID="4840">
             <objects>
-                <tableViewController id="4841" sceneMemberID="viewController" customClass="CategoryContentView" storyboardIdentifier="CategoryContentView">
+                <tableViewController id="4841" sceneMemberID="viewController" customClass="CategoryView" storyboardIdentifier="CategoryView">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="66" sectionFooterHeight="66" id="4842" estimatedRowHeight="-1">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -79,7 +79,7 @@
                                             <color key="backgroundColor" colorSpace="calibratedWhite" white="0" alpha="1"/>
                                         </imageView>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" id="9214" translatesAutoresizingMaskIntoConstraints="NO">
-                                            <rect key="frame" x="316" y="8" width="1368" height="208"/>
+                                            <rect key="frame" x="316" y="8" width="1368" height="216"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="300" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5824" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" verticalCompressionResistancePriority="800" text="Title">
                                                     <rect key="frame" x="0.0" y="0.0" width="1368" height="69"/>
@@ -88,7 +88,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" id="5827" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" textAlignment="natural" adjustsFontSizeToFit="NO">
-                                                    <rect key="frame" x="0.0" y="69" width="1368" height="139"/>
+                                                    <rect key="frame" x="0.0" y="69" width="1368" height="147"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>

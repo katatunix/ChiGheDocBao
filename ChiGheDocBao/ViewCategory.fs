@@ -23,8 +23,6 @@ module Domain =
     open System.Text.RegularExpressions
 
     type private XmlType = XmlProvider<"types/tin-moi-nhat.rss">
-    //type private XmlType = XmlProvider<"https://tuoitre.vn/rss/tin-moi-nhat.rss">
-
 
     let private parseXml xmlString : Result<XmlType.Rss, string> =
         try
@@ -109,7 +107,7 @@ module Presenter =
         let thumbnails = ConcurrentDictionary<int, Image> ()
         let mutable stopDownloadThumbnails = id
 
-        let task = async {
+        do Async.Start <| async {
             let! hideLoading = view.ShowLoading "Chi ghẻ đang quậy, vui lòng chờ tí"
             let! ahsResult = downloadArticleHeads categoryUrl
             do! hideLoading
@@ -130,8 +128,6 @@ module Presenter =
                 stopDownloadThumbnails <- dis.Dispose >> stream.Stop
                 stream.Start ()
         }
-
-        do task |> Async.Start
 
         member this.GetArticleHeadsCount () =
             articleHeads.Length
@@ -157,7 +153,7 @@ module tvOS =
     open Presenter
     open Common.tvOS
 
-    let cachedDownloadImage = Common.Network.downloadImage |> Utils.memo
+    let private cachedDownloadImage = Common.Network.downloadImage |> Utils.memo
 
     [<Register ("ArticleHeadCell")>]
     type ArticleHeadCell (handle : IntPtr) =
@@ -170,8 +166,8 @@ module tvOS =
         [<Outlet>]
         member val Thumbnail : UIImageView = null with get, set
 
-    [<Register ("CategoryContentView")>]
-    type tvOSCategoryContentView (handle : IntPtr) =
+    [<Register ("CategoryView")>]
+    type tvOSCategoryView (handle : IntPtr) =
         inherit UITableViewController (handle)
 
         let mutable category = Category.Dummy
@@ -203,9 +199,7 @@ module tvOS =
                 cell.Thumbnail.Image <- UIImage.LoadFromData (NSData.FromArray bytes)
             | None ->
                 cell.Thumbnail.Image <- null
-
-            //cell.LayoutIfNeeded ()
-            //cell.UpdateConstraintsIfNeeded ()
+                
             cell :> UITableViewCell
 
         override this.GetCell (tableView, indexPath) =

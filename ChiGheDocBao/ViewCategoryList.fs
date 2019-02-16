@@ -47,11 +47,7 @@ module Domain =
         cat "Công nghệ" "http://docbao.vn/rss/export/hi-tech.rss"
         cat "Doanh nghiệp" "http://docbao.vn/rss/export/doanh-nghiep.rss"
     |]
-
-    let tuoitre = [|
-        cat "Tin moi nhat" "https://tuoitre.vn/rss/tin-moi-nhat.rss"
-    |]
-
+    
     let categories = vnexpress
 
 module Presenter =
@@ -100,6 +96,6 @@ module tvOS =
 
         interface CategoryListView with
             member this.ShowCategoryContentView category =
-                let vc = this.Storyboard.InstantiateViewController "CategoryContentView" :?> tvOSCategoryContentView
+                let vc = this.Storyboard.InstantiateViewController "CategoryView" :?> tvOSCategoryView
                 vc.Init category
                 this.NavigationController.PushViewController (vc, false)

@@ -2,6 +2,22 @@
 
 open ChiGheDocBao
 
+module tvOS =
+    open System
+    open Foundation
+    open UIKit
+
+    let test () =
+
+        let t = Type.GetType "WebKit.WKWebView"
+        let webview = Activator.CreateInstance(t) :?> WebKit.WKWebView
+        let x = WebKit.WKWebView ()
+        ()
+
+    //[<Register ("CategoryContentView")>]
+    //type tvOSCategoryContentView (handle : IntPtr) =
+        //inherit UITableViewController (handle)
+
 //module Domain =
     //open Common.Domain
 

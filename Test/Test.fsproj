@@ -67,10 +67,9 @@
     <Compile Include="..\ChiGheDocBao\Common.Network.fs">
       <Link>Common.Network.fs</Link>
     </Compile>
-    <Compile Include="..\ChiGheDocBao\ViewArticle.Domain.fs">
-      <Link>ViewArticle.Domain.fs</Link>
+    <Compile Include="..\ChiGheDocBao\ViewArticle.fs">
+      <Link>ViewArticle.fs</Link>
     </Compile>
-    <Compile Include="Test.ViewArticle.Domain.fs" />
   </ItemGroup>
   <Import Project="$(FSharpTargetsPath)" />
 </Project>

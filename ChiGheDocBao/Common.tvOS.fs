@@ -14,7 +14,7 @@ let runOnViewThread (vc : UIViewController) f =
             return y.Value
         }
 
-let reduce x =
+let private reduce x =
     async {
         let! y = x
         return! y
@@ -24,7 +24,7 @@ let runOnViewThread2 (vc : UIViewController) f =
     runOnViewThread vc f
     >> reduce
 
-let awaitThenDispose handle =
+let private awaitThenDispose handle =
     async {
         do! Async.AwaitWaitHandle handle |> Async.Ignore
         handle.Dispose ()
