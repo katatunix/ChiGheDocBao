@@ -22,3 +22,4 @@ let memo (f : 'T -> Result<'U, 'V>) =
             | Ok u -> cache.[t] <- u
             | Error _ -> ()
             result
+            

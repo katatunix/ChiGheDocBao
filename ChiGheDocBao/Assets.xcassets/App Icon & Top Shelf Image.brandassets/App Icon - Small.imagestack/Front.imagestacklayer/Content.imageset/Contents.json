@@ -1,50 +1,13 @@
 {
   "images": [
     {
-      "idiom": "universal"
-    },
-    {
+      "filename": "chighe.jpg",
       "scale": "1x",
-      "idiom": "universal"
+      "idiom": "tv"
     },
     {
       "scale": "2x",
-      "idiom": "universal"
-    },
-    {
-      "scale": "3x",
-      "idiom": "universal"
-    },
-    {
-      "idiom": "iphone"
-    },
-    {
-      "scale": "1x",
-      "idiom": "iphone"
-    },
-    {
-      "scale": "2x",
-      "idiom": "iphone"
-    },
-    {
-      "subtype": "retina4",
-      "scale": "2x",
-      "idiom": "iphone"
-    },
-    {
-      "scale": "3x",
-      "idiom": "iphone"
-    },
-    {
-      "idiom": "ipad"
-    },
-    {
-      "scale": "1x",
-      "idiom": "ipad"
-    },
-    {
-      "scale": "2x",
-      "idiom": "ipad"
+      "idiom": "tv"
     }
   ],
   "info": {

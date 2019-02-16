@@ -6,10 +6,13 @@ open ChiGheDocBao
 open Common.Domain
 
 let downloadString : DownloadString = fun (Url url) ->
-    try
-        Ok <| Http.RequestString (url, timeout = 10000)
-    with ex ->
-        Error <| String.Format ("Could not download string [{0}] due to: {1}", url, ex.Message)
+    async {
+        try
+            let! str = Http.AsyncRequestString (url, timeout = 10000, responseEncodingOverride = "UTF-8")
+            return Ok str
+        with ex ->
+            return Error <| String.Format ("Could not download string [{0}] due to: {1}", url, ex.Message)
+    }
 
 let downloadImage : DownloadImage = fun (Url url) ->
     try

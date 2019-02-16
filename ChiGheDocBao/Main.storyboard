@@ -72,7 +72,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="300" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5824" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" verticalCompressionResistancePriority="800" text="Title">
-                                            <rect key="frame" x="316" y="8" width="1392" height="69"/>
+                                            <rect key="frame" x="316" y="8" width="1376" height="69"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                             <color key="textColor" colorSpace="calibratedRGB" red="0.57647058823529407" green="0.12549019607843137" blue="0.5725490196078431" alpha="1"/>
                                             <nil key="highlightedColor"/>
@@ -93,7 +93,7 @@
                                     </subviews>
                                     <constraints>
                                         <constraint id="5825" firstItem="5824" firstAttribute="top" secondItem="4846" secondAttribute="topMargin"/>
-                                        <constraint id="6029" firstAttribute="trailing" secondItem="5824" secondAttribute="trailingMargin"/>
+                                        <constraint id="6029" firstAttribute="trailing" secondItem="5824" secondAttribute="trailing" constant="8"/>
                                         <constraint id="6031" firstAttribute="bottom" secondItem="5827" secondAttribute="bottom" constant="16"/>
                                         <constraint id="6032" firstItem="5827" firstAttribute="trailing" secondItem="4846" secondAttribute="trailingMargin"/>
                                         <constraint id="6033" firstItem="5827" firstAttribute="top" secondItem="5824" secondAttribute="bottomMargin" constant="8"/>

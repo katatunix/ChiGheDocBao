@@ -10,33 +10,35 @@ module Domain =
         Title : string
         DateTime : DateTime
         Description : string
-        ImageUrl : Url }
+        ImageUrl : Url
+    }
 
-    type DownloadArticleHeads = Url -> (Result<ArticleHead [], string> -> unit) -> unit
+    type DownloadArticleHeads = Url -> AsyncResult<ArticleHead [], string>
 
-    type DownloadThumbnails = ArticleHead [] -> (int -> Image -> unit) -> (unit -> unit)
+    type DownloadThumbnails = ArticleHead [] -> Stream<int * Image>
 
     // Impl
-    
+
     open FSharp.Data
+    open System.Text.RegularExpressions
 
     type private XmlType = XmlProvider<"types/tin-moi-nhat.rss">
 
     let private parseXml xmlString : Result<XmlType.Rss, string> =
         try
-            Ok (XmlType.Parse xmlString)
+            Ok <| XmlType.Parse xmlString
         with ex ->
-            Error ("Invalid XML: " + ex.Message)
+            Error <| "Invalid XML: " + ex.Message
 
     let private parseDescription description =
-        let pattern = """src="(.+)" ></a></br>(.+)"""
-        let m = Text.RegularExpressions.Regex.Match (description, pattern)
+        let pattern = """src="(.+)" /?></a></br>(.+)"""
+        let m = Regex.Match (description, pattern)
         if m.Success then
             let imageUrl = m.Groups.[1].Value
             let content = m.Groups.[2].Value
             Ok (Url imageUrl, content)
         else
-            Error ("Invalid description: " + description)
+            Error <| "Invalid description: " + description
 
     let private parseArticleHead (item : XmlType.Item) =
         result {
@@ -45,7 +47,9 @@ module Domain =
                 Title = item.Title
                 DateTime = item.PubDate.DateTime
                 Description = description
-                ImageUrl = imageUrl } }
+                ImageUrl = imageUrl
+            }
+        }
 
     let private parseArticleHeads (rss : XmlType.Rss) =
         rss.Channel.Items
@@ -53,29 +57,31 @@ module Domain =
         |> Array.choose Result.toOption
 
     let downloadArticleHeads (downloadString : DownloadString) : DownloadArticleHeads =
-        fun categoryUrl onDone ->
-            categoryUrl
-            |> Parallel.startThread
-                (fun url ->
-                    result {
-                        let! xmlString = downloadString url
-                        let! rss = parseXml xmlString
-                        return parseArticleHeads rss })
-                onDone
+        fun categoryUrl ->
+            asyncResult {
+                let! xmlString = downloadString categoryUrl
+                let! rss = parseXml xmlString |> AsyncResult.ofResult
+                return! parseArticleHeads rss |> AsyncResult.ofSuccess
+            }
 
     let downloadThumbnails (downloadImage : DownloadImage) : DownloadThumbnails =
-        let hardDownloadImage = downloadImage |> Utils.hard 3
-        fun articleHeads onDoneEach ->
-            articleHeads
-            |> Parallel.processMulti
-                (fun articleHead -> hardDownloadImage articleHead.ImageUrl)
-                (fun index result ->
-                    match result with
-                    | Ok image -> onDoneEach index image
-                    | Error _ -> ())
+        fun articleHeads ->
+            let hardDownloadImage = downloadImage |> Utils.hard 3
+            let stream =
+                articleHeads
+                |> Stream.create (fun ah -> hardDownloadImage ah.ImageUrl)
+            let imageObservable =
+                stream.Observable
+                |> Observable.choose (fun (index, imageResult) ->
+                    match imageResult with
+                    | Ok image -> Some (index, image)
+                    | Error _ -> None
+                )
+            stream |> Stream.changeObservable imageObservable
 
 module Presenter =
     open System
+    open System.Collections.Concurrent
     open Common.Domain
     open Domain
 
@@ -85,37 +91,45 @@ module Presenter =
         Image : Image option }
 
     type CategoryView =
-        abstract ShowLoadingMessage : string -> ((unit -> unit) -> unit)
-        abstract ShowErrorMessage : string -> string -> (unit -> unit) -> unit
+        abstract ShowLoading : message:string -> Async<Async<unit>>
+        abstract ShowError : title:string -> content:string -> Async<unit>
         abstract Back : unit -> unit
-        abstract OnListUpdated : unit -> unit
-        abstract OnThumbnailUpdated : unit -> unit
+        abstract OnAhsUpdated : unit -> unit
+        abstract OnThumbnailUpdated : int -> unit
 
     [<AllowNullLiteral>]
     type CategoryPresenter (categoryUrl : Url,
                             downloadArticleHeads : DownloadArticleHeads,
                             downloadThumbnails : DownloadThumbnails,
-                            view : CategoryView,
-                            runOnViewThread) =
-
-        let hideLoadingMessage = view.ShowLoadingMessage "Chi ghẻ đang quậy, vui lòng chờ tí"
+                            view : CategoryView) =
 
         let mutable articleHeads : ArticleHead [] = Array.empty
-        let thumbnails = Collections.Generic.Dictionary<int, Image> ()
+        let thumbnails = ConcurrentDictionary<int, Image> ()
         let mutable stopDownloadThumbnails = id
 
-        do downloadArticleHeads categoryUrl <| fun result ->
-            hideLoadingMessage <| fun _ ->
-                match result with
-                | Error message ->
-                    view.ShowErrorMessage "Có lỗi xảy ra" message view.Back
-                | Ok heads ->
-                    articleHeads <- heads
-                    view.OnListUpdated ()
-                    stopDownloadThumbnails <-
-                        downloadThumbnails
-                            articleHeads
-                            <| fun index image -> runOnViewThread <| fun _ -> thumbnails.[index] <- image; view.OnThumbnailUpdated ()
+        let task = async {
+            let! hideLoading = view.ShowLoading "Chi ghẻ đang quậy, vui lòng chờ tí"
+            let! ahsResult = downloadArticleHeads categoryUrl
+            do! hideLoading
+            match ahsResult with
+            | Error msg ->
+                do! view.ShowError "Có lỗi xảy ra" msg
+                view.Back ()
+            | Ok ahs ->
+                articleHeads <- ahs
+                view.OnAhsUpdated ()
+                let stream = downloadThumbnails ahs
+                let dis =
+                    stream.Observable
+                    |> Observable.subscribe (fun (index, image) ->
+                        thumbnails.[index] <- image
+                        view.OnThumbnailUpdated index
+                    )
+                stopDownloadThumbnails <- dis.Dispose >> stream.Stop
+                stream.Start ()
+        }
+
+        do task |> Async.Start
 
         member this.GetArticleHeadsCount () =
             articleHeads.Length
@@ -125,7 +139,8 @@ module Presenter =
             let vm : ArticleHeadViewModel = {
                 Title = article.Title
                 Description = String.Format ("{0} | {1}", article.DateTime.ToString "d/M/yyyy HH:mm", article.Description)
-                Image = match thumbnails.TryGetValue index with true, x -> Some x | _ -> None }
+                Image = match thumbnails.TryGetValue index with true, x -> Some x | _ -> None
+            }
             vm
 
         member this.OnBack () =
@@ -170,8 +185,7 @@ module tvOS =
             presenter <- CategoryPresenter (category.Url,
                                             downloadArticleHeads Common.Network.downloadString,
                                             downloadThumbnails cachedDownloadImage,
-                                            this,
-                                            this.InvokeOnMainThread)
+                                            this)
 
         override this.RowsInSection (tableView, section) =
             presenter.GetArticleHeadsCount () |> nint
@@ -202,18 +216,22 @@ module tvOS =
                 presenter.OnBack ()
 
         interface CategoryView with
-            member this.ShowLoadingMessage message =
+            member this.ShowLoading message =
                 showToast this message
 
-            member this.ShowErrorMessage title message completion =
-                showMessageBox this title message completion
+            member this.ShowError title message =
+                showAlert this title message
 
             member this.Back () =
-                this.NavigationController.PopViewController false |> ignore
+                this.InvokeOnMainThread (fun _ ->
+                    this.NavigationController.PopViewController false |> ignore
+                )
 
-            member this.OnListUpdated () =
-                this.TableView.ReloadData ()
+            member this.OnAhsUpdated () =
+                this.InvokeOnMainThread (fun _ -> this.TableView.ReloadData ())
 
-            member this.OnThumbnailUpdated () =
-                for cell in this.TableView.VisibleCells do
-                    this.UpdateCell (cell :?> ArticleHeadCell) |> ignore
+            member this.OnThumbnailUpdated _ =
+                this.InvokeOnMainThread (fun _ ->
+                    for cell in this.TableView.VisibleCells do
+                        this.UpdateCell (cell :?> ArticleHeadCell) |> ignore
+                )

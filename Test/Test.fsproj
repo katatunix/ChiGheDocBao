@@ -58,8 +58,8 @@
     <Compile Include="..\ChiGheDocBao\Utils.fs">
       <Link>Utils.fs</Link>
     </Compile>
-    <Compile Include="..\ChiGheDocBao\Parallel.fs">
-      <Link>Parallel.fs</Link>
+    <Compile Include="..\ChiGheDocBao\Stream.fs">
+      <Link>Stream.fs</Link>
     </Compile>
     <Compile Include="..\ChiGheDocBao\Common.Domain.fs">
       <Link>Common.Domain.fs</Link>

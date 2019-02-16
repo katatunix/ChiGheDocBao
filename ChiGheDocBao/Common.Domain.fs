@@ -11,5 +11,5 @@ type Image = Image of byte [] with
 type Category = { Name : string; Url : Url } with
     static member Dummy = { Name = ""; Url = Url.Dummy }
 
-type DownloadString = Url -> Result<string, string>
+type DownloadString = Url -> AsyncResult<string, string>
 type DownloadImage = Url -> Result<Image, string>
