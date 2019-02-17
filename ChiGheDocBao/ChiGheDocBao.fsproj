@@ -127,6 +127,8 @@
     <Compile Include="Common.Network.fs" />
     <Compile Include="Common.tvOS.fs" />
     <Compile Include="ViewArticle.Domain.fs" />
+    <Compile Include="ViewArticle.Presenter.fs" />
+    <Compile Include="ViewArticle.tvOS.fs" />
     <Compile Include="ViewCategory.Domain.fs" />
     <Compile Include="ViewCategory.Presenter.fs" />
     <Compile Include="ViewCategory.tvOS.fs" />

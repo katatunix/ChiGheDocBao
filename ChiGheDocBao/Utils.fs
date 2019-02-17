@@ -22,4 +22,9 @@ let memo (f : 'T -> Result<'U, 'V>) =
             | Ok u -> cache.[t] <- u
             | Error _ -> ()
             result
-            
+
+type SafeValue<'T> (initialValue : 'T) =
+    let mutable value = initialValue
+    member this.Value
+        with get () = lock this (fun _ -> value)
+        and set v = lock this (fun _ -> value <- v)

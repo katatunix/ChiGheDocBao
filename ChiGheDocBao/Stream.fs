@@ -2,6 +2,7 @@
 
 open System
 open System.Threading
+open Utils
 
 type Stream<'T> = {
     Observable : IObservable<'T>
@@ -17,13 +18,13 @@ module Stream =
         Stop = stream.Stop
     }
 
-    let create map (items : seq<_>) =
+    let create jobs map (items : seq<_>) =
         let enum = items.GetEnumerator ()
         let mutable index = 0
-        let mutable still = true
+        let still = SafeValue (true)
 
         let next () = lock enum <| fun _ ->
-            if enum.MoveNext () && still then
+            if still.Value && enum.MoveNext () then
                 let i = index
                 index <- index + 1
                 Some (i, enum.Current)
@@ -38,15 +39,14 @@ module Stream =
                 | None -> ()
                 | Some (index, item) ->
                     let result = map item
-                    if still then
+                    if still.Value then
                         event.Trigger (index, result)
                         loop ()
             loop ()
-
-        let jobs = System.Environment.ProcessorCount
+            
         let threads = Array.init jobs (fun _ -> Thread (ThreadStart threadWork))
         {
             Observable = event.Publish
             Start = fun _ -> for thread in threads do thread.Start ()
-            Stop = fun _ -> still <- false
+            Stop = fun _ -> still.Value <- false
         }

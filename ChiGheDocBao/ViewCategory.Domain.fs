@@ -1,19 +1,11 @@
 ﻿module ChiGheDocBao.ViewCategory.Domain
-open ChiGheDocBao
 
-open System
+open ChiGheDocBao
 open Common.Domain
 
-type ArticleHead = {
-    Title : string
-    DateTime : DateTime
-    Description : string
-    ImageUrl : Url
-}
+type FetchArticleHeads = Url -> AsyncResult<ArticleHead [], string>
 
-type DownloadArticleHeads = Url -> AsyncResult<ArticleHead [], string>
-
-type DownloadThumbnails = ArticleHead [] -> Stream<int * Image>
+type FetchThumbnails = ArticleHead [] -> Stream<int * Image>
 
 // Impl
 
@@ -64,6 +56,7 @@ let private parseArticleHead (item : XmlDoc.Item) =
             DateTime = item.PubDate.DateTime
             Description = description
             ImageUrl = imageUrl
+            Link = Url item.Link
         }
     }
 
@@ -72,20 +65,20 @@ let private parseArticleHeads (rss : XmlDoc.Rss) =
     |> Array.map parseArticleHead
     |> Array.choose Result.toOption
 
-let downloadArticleHeads (downloadString : DownloadString) : DownloadArticleHeads =
+let fetchArticleHeads (fetchString : FetchString) : FetchArticleHeads =
     fun categoryUrl ->
         asyncResult {
-            let! xmlString = downloadString categoryUrl
+            let! xmlString = fetchString categoryUrl
             let! rss = parseXml xmlString |> AsyncResult.ofResult
             return! parseArticleHeads rss |> AsyncResult.ofSuccess
         }
 
-let downloadThumbnails (downloadImage : DownloadImage) : DownloadThumbnails =
+let fetchThumbnails (fetchImage : FetchImage) : FetchThumbnails =
     fun articleHeads ->
-        let hardDownloadImage = downloadImage |> Utils.hard 3
+        let hardFetchImage = fetchImage |> Utils.hard 3
         let stream =
             articleHeads
-            |> Stream.create (fun ah -> hardDownloadImage ah.ImageUrl)
+            |> Stream.create 4 (fun ah -> hardFetchImage ah.ImageUrl)
         let imageObservable =
             stream.Observable
             |> Observable.choose (fun (index, imageResult) ->

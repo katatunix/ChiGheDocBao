@@ -56,7 +56,7 @@ module Presenter =
     open Domain
 
     type CategoryListView =
-        abstract member ShowCategoryContentView : Category -> unit
+        abstract member PushCategoryView : Category -> unit
 
     [<AllowNullLiteral>]
     type CategoryListPresenter (view : CategoryListView) =
@@ -65,7 +65,7 @@ module Presenter =
         member this.GetCategoryName index = categories.[index].Name
 
         member this.OnCategorySelected index =
-            view.ShowCategoryContentView categories.[index]
+            view.PushCategoryView categories.[index]
 
 module tvOS =
 
@@ -97,7 +97,7 @@ module tvOS =
             presenter.OnCategorySelected indexPath.Row
 
         interface CategoryListView with
-            member this.ShowCategoryContentView category =
+            member this.PushCategoryView category =
                 let vc = this.Storyboard.InstantiateViewController "CategoryView" :?> tvOSCategoryView
                 vc.Init category
                 this.NavigationController.PushViewController (vc, false)

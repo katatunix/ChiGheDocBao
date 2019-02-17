@@ -3,6 +3,8 @@
 open System
 open System.Threading
 open UIKit
+open Foundation
+open ChiGheDocBao
 
 let runOnViewThread (vc : UIViewController) f =
     fun x ->
@@ -53,6 +55,9 @@ let showToast (vc : UIViewController) content =
             awaitThenDispose mre
         )
     )
+
+let uiImage (Common.Domain.Image bytes) =
+    UIImage.LoadFromData (NSData.FromArray bytes)
 
 type EstimatedTableViewController (handle : IntPtr) =
     inherit UITableViewController (handle)

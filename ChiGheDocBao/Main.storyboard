@@ -124,21 +124,173 @@
             </objects>
             <point key="canvasLocation" x="2597" y="2227"/>
         </scene>
-        <scene sceneID="9419">
+        <scene sceneID="9626">
             <objects>
-                <viewController id="9420" sceneMemberID="viewController" customClass="ArticleView" storyboardIdentifier="ArticleView">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9417"/>
-                        <viewControllerLayoutGuide type="bottom" id="9418"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="9421">
+                <tableViewController id="9627" sceneMemberID="viewController" customClass="ArticleView" storyboardIdentifier="ArticleView">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="66" sectionFooterHeight="66" id="9628" estimatedRowHeight="-1">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9422" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9631" reuseIdentifier="TitleCell" customClass="TitleCell" rowHeight="115">
+                                <rect key="frame" x="0.0" y="66" width="1700" height="115"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9631" id="9632">
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="115"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="10432" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0">
+                                            <rect key="frame" x="16" y="0.0" width="1668" height="115"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                            <color key="textColor" colorSpace="calibratedRGB" red="0.57647058823529407" green="0.12549019607843137" blue="0.5725490196078431" alpha="1"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint id="10433" firstItem="10432" firstAttribute="leading" secondItem="9632" secondAttribute="leading" constant="16"/>
+                                        <constraint id="10434" firstItem="10432" firstAttribute="top" secondItem="9632" secondAttribute="top"/>
+                                        <constraint id="10435" firstAttribute="bottom" secondItem="10432" secondAttribute="bottom"/>
+                                        <constraint id="10436" firstAttribute="trailing" secondItem="10432" secondAttribute="trailing" constant="16"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="Label" destination="10432" id="name-outlet-10432"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9635" reuseIdentifier="DescriptionCell" customClass="DescriptionCell">
+                                <rect key="frame" x="0.0" y="195" width="1700" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9635" id="9636">
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="11603" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0">
+                                            <rect key="frame" x="16" y="0.0" width="1668" height="44"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                            <color key="textColor" colorSpace="calibratedWhite" white="0.333333333333333" alpha="1"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint id="11604" firstItem="11603" firstAttribute="leading" secondItem="9636" secondAttribute="leading" constant="16"/>
+                                        <constraint id="11605" firstItem="11603" firstAttribute="top" secondItem="9636" secondAttribute="top"/>
+                                        <constraint id="11606" firstAttribute="bottom" secondItem="11603" secondAttribute="bottom"/>
+                                        <constraint id="11607" firstAttribute="trailing" secondItem="11603" secondAttribute="trailing" constant="16"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="Label" destination="11603" id="name-outlet-11603"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9637" reuseIdentifier="ParaCell" customClass="ParaCell">
+                                <rect key="frame" x="0.0" y="253" width="1700" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9637" id="9638">
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Para" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="12048" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0">
+                                            <rect key="frame" x="16" y="0.0" width="1668" height="44"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint id="12049" firstItem="12048" firstAttribute="leading" secondItem="9638" secondAttribute="leading" constant="16"/>
+                                        <constraint id="12050" firstItem="12048" firstAttribute="top" secondItem="9638" secondAttribute="top"/>
+                                        <constraint id="12051" firstAttribute="bottom" secondItem="12048" secondAttribute="bottom"/>
+                                        <constraint id="12052" firstAttribute="trailing" secondItem="12048" secondAttribute="trailing" constant="16"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="Label" destination="12048" id="name-outlet-12048"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9642" reuseIdentifier="SecImageCell" customClass="SecImageCell" rowHeight="366">
+                                <rect key="frame" x="0.0" y="311" width="1700" height="366"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9642" id="9643">
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="366"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" id="14873" translatesAutoresizingMaskIntoConstraints="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="1700" height="366"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="14872" translatesAutoresizingMaskIntoConstraints="NO" misplaced="YES">
+                                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="238"/>
+                                                    <color key="backgroundColor" colorSpace="calibratedWhite" white="0" alpha="1"/>
+                                                    <constraints>
+                                                        <constraint id="14878" firstAttribute="height" constant="300"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <view contentMode="scaleToFill" id="15645" translatesAutoresizingMaskIntoConstraints="NO">
+                                                    <rect key="frame" x="0.0" y="238" width="1700" height="128"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Caption" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="14871" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0">
+                                                            <rect key="frame" x="16" y="16" width="1700" height="34"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                            <color key="textColor" colorSpace="calibratedWhite" white="0.333333333333333" alpha="1"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint id="15646" firstItem="14871" firstAttribute="leading" secondItem="15645" secondAttribute="leading" constant="16"/>
+                                                        <constraint id="15647" firstItem="14871" firstAttribute="top" secondItem="15645" secondAttribute="top" constant="8"/>
+                                                        <constraint id="15648" firstAttribute="bottom" secondItem="14871" secondAttribute="bottom" constant="8"/>
+                                                        <constraint id="15649" firstItem="14871" firstAttribute="trailing" secondItem="15645" secondAttribute="trailing" constant="16"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint id="14876" firstItem="14873" firstAttribute="top" secondItem="9643" secondAttribute="top"/>
+                                        <constraint id="14877" firstAttribute="bottom" secondItem="14873" secondAttribute="bottom"/>
+                                        <constraint id="14879" firstItem="14873" firstAttribute="leading" secondItem="9643" secondAttribute="leading"/>
+                                        <constraint id="14881" firstAttribute="trailing" secondItem="14873" secondAttribute="trailing"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="MyImageView" destination="14872" id="name-outlet-14872"/>
+                                    <outlet property="CaptionLabel" destination="14871" id="name-outlet-14871"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9665" reuseIdentifier="SubtitleCell" customClass="SubtitleCell">
+                                <rect key="frame" x="0.0" y="691" width="1700" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9665" id="9666">
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="12541" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0">
+                                            <rect key="frame" x="16" y="0.0" width="1668" height="44"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                            <color key="textColor" colorSpace="calibratedRGB" red="0.57647058823529407" green="0.12549019607843137" blue="0.5725490196078431" alpha="1"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint id="12542" firstItem="12541" firstAttribute="leading" secondItem="9666" secondAttribute="leading" constant="16"/>
+                                        <constraint id="12543" firstItem="12541" firstAttribute="top" secondItem="9666" secondAttribute="top"/>
+                                        <constraint id="12544" firstAttribute="bottom" secondItem="12541" secondAttribute="bottom"/>
+                                        <constraint id="12786" firstAttribute="trailing" secondItem="12541" secondAttribute="trailing" constant="16"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="Label" destination="12541" id="name-outlet-12541"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="9627" id="9629"/>
+                            <outlet property="delegate" destination="9627" id="9630"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9633" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="515" y="2482"/>
+            <point key="canvasLocation" x="220" y="2379"/>
         </scene>
     </scenes>
 </document>

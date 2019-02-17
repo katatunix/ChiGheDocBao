@@ -1,16 +1,16 @@
 ﻿module ChiGheDocBao.ViewCategory.tvOS
-open ChiGheDocBao
 
 open System
 open Foundation
 open UIKit
-
+open ChiGheDocBao
 open Common.Domain
 open Domain
 open Presenter
 open Common.tvOS
+open ViewArticle.tvOS
 
-let private cachedDownloadImage = Common.Network.downloadImage |> Utils.memo
+let private cachedDownloadImage = Common.Network.fetchImage |> Utils.memo
 
 [<Register ("ArticleHeadCell")>]
 type ArticleHeadCell (handle : IntPtr) =
@@ -38,8 +38,8 @@ type tvOSCategoryView (handle : IntPtr) =
 
         this.NavigationItem.Title <- category.Name
         presenter <- CategoryPresenter (category.Url,
-                                        downloadArticleHeads Common.Network.downloadString,
-                                        downloadThumbnails cachedDownloadImage,
+                                        fetchArticleHeads Common.Network.fetchString,
+                                        fetchThumbnails cachedDownloadImage,
                                         this)
 
     override this.RowsInSection (tableView, section) =
@@ -52,8 +52,8 @@ type tvOSCategoryView (handle : IntPtr) =
         cell.DescriptionLabel.Text <- vm.Description
 
         match vm.Image with
-        | Some (Image bytes) ->
-            cell.Thumbnail.Image <- UIImage.LoadFromData (NSData.FromArray bytes)
+        | Some image ->
+            cell.Thumbnail.Image <- uiImage image
         | None ->
             cell.Thumbnail.Image <- null
 
@@ -63,6 +63,9 @@ type tvOSCategoryView (handle : IntPtr) =
         let cell = tableView.DequeueReusableCell "ArticleHeadCell" :?> ArticleHeadCell
         cell.Index <- indexPath.Row
         this.UpdateCell cell
+
+    override this.RowSelected (tableView, indexPath) =
+        presenter.OnArticleHeadSelected indexPath.Row
 
     override this.WillMoveToParentViewController vc =
         base.WillMoveToParentViewController vc
@@ -81,15 +84,20 @@ type tvOSCategoryView (handle : IntPtr) =
                 this.NavigationController.PopViewController false |> ignore
             )
 
-        member this.OnAhsUpdated () =
+        member this.OnAhsFetched () =
             this.InvokeOnMainThread (fun _ ->
                 this.TableView.ReloadData ()
             )
 
-        member this.OnThumbnailUpdated index =
+        member this.OnThumbnailFetched index =
             this.InvokeOnMainThread (fun _ ->
                 for cell in this.TableView.VisibleCells do
                     let cell = cell :?> ArticleHeadCell
                     if cell.Index = index then
                         this.UpdateCell cell |> ignore
             )
+
+        member this.PushArticleView articleHead =
+            let vc = this.Storyboard.InstantiateViewController "ArticleView" :?> tvOSArticleView
+            vc.Init articleHead
+            this.NavigationController.PushViewController (vc, false)

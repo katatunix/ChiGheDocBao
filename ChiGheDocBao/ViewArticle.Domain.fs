@@ -9,11 +9,10 @@ type Section =
     | SecImage of Url * string
 
 type Article = {
-    Title : string
-    Description : string
-    Sections : Section list }
+    Sections : Section []
+}
 
-type DownloadArticle = Url -> AsyncResult<Article, string>
+type FetchArticle = Url -> AsyncResult<Article, string>
 
 // Impl
 
@@ -37,14 +36,6 @@ let private getExactlyOne (doc : HtmlDoc) cssSelector =
 let private txt (node : HtmlNode) = node.InnerText().Trim()
 let private attr name (node : HtmlNode) = (node.AttributeValue name).Trim()
 
-let private parseTitle (doc : HtmlDoc) =
-    getExactlyOne doc "head > title"
-    |> AsyncResult.map txt
-
-let private parseDescription (doc : HtmlDoc) =
-    getExactlyOne doc "head > meta[name=description]"
-    |> AsyncResult.map (attr "content")
-
 let private (|NormalArticle|SlideshowArticle|) (article : HtmlNode) =
     let nodes = article.CssSelect "div#article_content"
     if nodes.IsEmpty then
@@ -52,7 +43,7 @@ let private (|NormalArticle|SlideshowArticle|) (article : HtmlNode) =
     else
         SlideshowArticle nodes.[0]
         
-let private parseNormalArticle (article : HtmlNode) = [
+let private parseNormalArticle (article : HtmlNode) = [|
     for node in article.Elements () do
         if node.Name () = "p" && node.HasClass "Normal" then
             yield Para <| txt node
@@ -69,9 +60,9 @@ let private parseNormalArticle (article : HtmlNode) = [
                 )
             if secImage.IsSome then
                 yield secImage.Value
-]
+|]
 
-let private parseSlideshowArticle (article : HtmlNode) = [
+let private parseSlideshowArticle (article : HtmlNode) = [|
     for node in article.Elements () do
         if node.Name () = "div" && node.HasClass "item_slide_show" then
             let imgUrl =
@@ -88,28 +79,21 @@ let private parseSlideshowArticle (article : HtmlNode) = [
             | _ -> ()
         elif node.Name () = "div" && node.HasClass "fck_detail" then
             yield Para <| txt node
-]
+|]
 
 let private parseSections article =
     match article with
     | NormalArticle node -> parseNormalArticle node
     | SlideshowArticle node -> parseSlideshowArticle node
 
-let downloadArticle (downloadString : DownloadString) : DownloadArticle =
+let fetchArticle (fetchString : FetchString) : FetchArticle =
     fun articleUrl -> asyncResult {
-        let! htmlString = downloadString articleUrl
+        let! htmlString = fetchString articleUrl
         let! doc = parseHtmlDoc htmlString
-
-        let! title = parseTitle doc
-        let! description = parseDescription doc
 
         let! article = getExactlyOne doc "article.content_detail"
 
         let sections = parseSections article
 
-        return {
-            Title = title
-            Description = description
-            Sections = sections
-        }
+        return { Sections = sections }
     }

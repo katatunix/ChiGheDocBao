@@ -17,22 +17,22 @@ type CategoryView =
     abstract ShowLoading : message:string -> Async<Async<unit>>
     abstract ShowError : title:string -> content:string -> Async<unit>
     abstract Back : unit -> unit
-    abstract OnAhsUpdated : unit -> unit
-    abstract OnThumbnailUpdated : int -> unit
+    abstract OnAhsFetched : unit -> unit
+    abstract OnThumbnailFetched : int -> unit
+    abstract PushArticleView : ArticleHead -> unit
 
 [<AllowNullLiteral>]
 type CategoryPresenter (categoryUrl : Url,
-                        downloadArticleHeads : DownloadArticleHeads,
-                        downloadThumbnails : DownloadThumbnails,
+                        fetchArticleHeads : FetchArticleHeads,
+                        fetchThumbnails : FetchThumbnails,
                         view : CategoryView) =
-
     let mutable articleHeads : ArticleHead [] = Array.empty
     let thumbnails = ConcurrentDictionary<int, Image> ()
-    let mutable stopDownloadThumbnails = id
+    let mutable stopFetchThumbnails = id
 
     do Async.Start <| async {
         let! hideLoading = view.ShowLoading "Chi ghẻ đang quậy, vui lòng chờ tí"
-        let! ahsResult = downloadArticleHeads categoryUrl
+        let! ahsResult = fetchArticleHeads categoryUrl
         do! hideLoading
         match ahsResult with
         | Error msg ->
@@ -40,15 +40,15 @@ type CategoryPresenter (categoryUrl : Url,
             view.Back ()
         | Ok ahs ->
             articleHeads <- ahs
-            view.OnAhsUpdated ()
-            let stream = downloadThumbnails ahs
+            view.OnAhsFetched ()
+            let stream = fetchThumbnails ahs
             let dis =
                 stream.Observable
                 |> Observable.subscribe (fun (index, image) ->
                     thumbnails.[index] <- image
-                    view.OnThumbnailUpdated index
+                    view.OnThumbnailFetched index
                 )
-            stopDownloadThumbnails <- dis.Dispose >> stream.Stop
+            stopFetchThumbnails <- stream.Stop >> dis.Dispose
             stream.Start ()
     }
 
@@ -64,5 +64,8 @@ type CategoryPresenter (categoryUrl : Url,
         }
         vm
 
+    member this.OnArticleHeadSelected index =
+        view.PushArticleView articleHeads.[index]
+
     member this.OnBack () =
-        stopDownloadThumbnails ()
+        stopFetchThumbnails ()

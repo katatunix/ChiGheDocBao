@@ -5,7 +5,7 @@ open FSharp.Data
 open ChiGheDocBao
 open Common.Domain
 
-let downloadString : DownloadString = fun (Url url) ->
+let fetchString : FetchString = fun (Url url) ->
     async {
         try
             let! str = Http.AsyncRequestString (url, timeout = 10000, responseEncodingOverride = "UTF-8")
@@ -14,7 +14,7 @@ let downloadString : DownloadString = fun (Url url) ->
             return Error <| String.Format ("Could not download string [{0}] due to: {1}", url, ex.Message)
     }
 
-let downloadImage : DownloadImage = fun (Url url) ->
+let fetchImage : FetchImage = fun (Url url) ->
     try
         let data = Http.Request (url, timeout = 30000)
         match data.Body with
