@@ -75,4 +75,5 @@ let downloadThumbnails (downloadImage : DownloadImage) : DownloadThumbnails =
                 | Ok image -> Some (index, image)
                 | Error _ -> None
             )
-        stream |> Stream.changeObservable imageObservable
+        stream
+        |> Stream.changeObservable imageObservable

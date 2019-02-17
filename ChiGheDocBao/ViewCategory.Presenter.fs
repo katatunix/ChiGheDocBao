@@ -10,7 +10,8 @@ open Domain
 type ArticleHeadViewModel = {
     Title : string
     Description : string
-    Image : Image option }
+    Image : Image option
+}
 
 type CategoryView =
     abstract ShowLoading : message:string -> Async<Async<unit>>

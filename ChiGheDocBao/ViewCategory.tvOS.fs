@@ -86,8 +86,10 @@ type tvOSCategoryView (handle : IntPtr) =
                 this.TableView.ReloadData ()
             )
 
-        member this.OnThumbnailUpdated _ =
+        member this.OnThumbnailUpdated index =
             this.InvokeOnMainThread (fun _ ->
                 for cell in this.TableView.VisibleCells do
-                    this.UpdateCell (cell :?> ArticleHeadCell) |> ignore
+                    let cell = cell :?> ArticleHeadCell
+                    if cell.Index = index then
+                        this.UpdateCell cell |> ignore
             )

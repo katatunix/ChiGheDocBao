@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "ChiGheDocBao", "ChiGheDocBao\ChiGheDocBao.fsproj", "{9CE8A5F9-B3E5-4D94-B62B-B61AEC7DD50D}"
 EndProject
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Test", "Test\Test.fsproj", "{7444E73F-5E76-4BC5-82BC-F3058A83DD2F}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "ChiGheDocBao.Tests", "ChiGheDocBao.Tests\ChiGheDocBao.Tests.fsproj", "{7444E73F-5E76-4BC5-82BC-F3058A83DD2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
