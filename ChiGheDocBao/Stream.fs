@@ -11,12 +11,11 @@ type Stream<'T> = {
 
 module Stream =
 
-    let changeObservable obs stream =
-        {
-            Observable = obs
-            Start = stream.Start
-            Stop = stream.Stop
-        }
+    let changeObservable obs stream = {
+        Observable = obs
+        Start = stream.Start
+        Stop = stream.Stop
+    }
 
     let create map (items : seq<_>) =
         let enum = items.GetEnumerator ()
