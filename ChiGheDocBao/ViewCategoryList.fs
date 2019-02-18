@@ -1,4 +1,5 @@
 ﻿namespace ChiGheDocBao.ViewCategoryList
+
 open ChiGheDocBao
 
 module Domain =
@@ -73,7 +74,6 @@ module tvOS =
     open Foundation
     open UIKit
     open Presenter
-    open ViewCategory.tvOS
 
     [<Register ("CategoryListView")>]
     type tvOSCategoryListView (handle : IntPtr) =
@@ -97,7 +97,8 @@ module tvOS =
             presenter.OnCategorySelected indexPath.Row
 
         interface CategoryListView with
+
             member this.PushCategoryView category =
-                let vc = this.Storyboard.InstantiateViewController "CategoryView" :?> tvOSCategoryView
+                let vc = this.Storyboard.InstantiateViewController "CategoryView" :?> ViewCategory.tvOS.tvOSCategoryView
                 vc.Init category
                 this.NavigationController.PushViewController (vc, false)

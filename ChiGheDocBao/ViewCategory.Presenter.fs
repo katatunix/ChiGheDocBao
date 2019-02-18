@@ -1,9 +1,8 @@
 ﻿module ChiGheDocBao.ViewCategory.Presenter
-open ChiGheDocBao
 
 open System
 open System.Collections.Concurrent
-
+open ChiGheDocBao
 open Common.Domain
 open Domain
 

@@ -54,7 +54,8 @@ type ArticlePresenter (articleHead : ArticleHead,
             stream.Start ()
     }
 
-    member this.Title = articleHead.Title
+    member this.Title =
+        articleHead.Title
 
     member this.CellsCount =
         match article with

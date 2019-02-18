@@ -7,12 +7,10 @@ open ChiGheDocBao
 open Common.Domain
 open Domain
 open Presenter
-open Common.tvOS
-open ViewArticle.tvOS
 
 [<Register ("ArticleHeadCell")>]
 type ArticleHeadCell (handle : IntPtr) =
-    inherit IndexCell (handle)
+    inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val TitleLabel : UILabel = null with get, set
     [<Outlet>] member val DescriptionLabel : UILabel = null with get, set
     [<Outlet>] member val Thumbnail : UIImageView = null with get, set
@@ -31,7 +29,7 @@ type tvOSCategoryView (handle : IntPtr) =
         base.ViewDidLoad ()
         presenter <- CategoryPresenter (category,
                                         fetchArticleHeads Common.Network.fetchString,
-                                        fetchThumbnails cachedFetchImage,
+                                        fetchThumbnails Common.tvOS.cachedFetchImage,
                                         this)
         this.NavigationItem.Title <- presenter.Title
 
@@ -43,7 +41,7 @@ type tvOSCategoryView (handle : IntPtr) =
 
         cell.TitleLabel.Text <- vm.Title
         cell.DescriptionLabel.Text <- vm.Description
-        cell.Thumbnail |> updateImage vm.Image
+        cell.Thumbnail |> Common.tvOS.updateImage vm.Image
 
         cell :> UITableViewCell
 
@@ -61,11 +59,12 @@ type tvOSCategoryView (handle : IntPtr) =
             presenter.OnBack ()
 
     interface CategoryView with
+
         member this.ShowLoading message =
-            showToast this message
+            Common.tvOS.showToast this message
 
         member this.ShowError title message =
-            showAlert this title message
+            Common.tvOS.showAlert this title message
 
         member this.Back () =
             this.InvokeOnMainThread (fun _ ->
@@ -86,6 +85,6 @@ type tvOSCategoryView (handle : IntPtr) =
             )
 
         member this.PushArticleView articleHead =
-            let vc = this.Storyboard.InstantiateViewController "ArticleView" :?> tvOSArticleView
+            let vc = this.Storyboard.InstantiateViewController "ArticleView" :?> ViewArticle.tvOS.tvOSArticleView
             vc.Init articleHead
             this.NavigationController.PushViewController (vc, false)

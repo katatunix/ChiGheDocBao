@@ -7,37 +7,36 @@ open ChiGheDocBao
 open Common.Domain
 open Domain
 open Presenter
-open Common.tvOS
 
 [<Register ("TitleCell")>]
 type TitleCell (handle : IntPtr) =
-    inherit IndexCell (handle)
+    inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("DescriptionCell")>]
 type DescriptionCell (handle : IntPtr) =
-    inherit IndexCell (handle)
+    inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("ParaCell")>]
 type ParaCell (handle : IntPtr) =
-    inherit IndexCell (handle)
+    inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("SecImageCell")>]
 type SecImageCell (handle : IntPtr) =
-    inherit IndexCell (handle)
+    inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val MyImageView : UIImageView = null with get, set
     [<Outlet>] member val CaptionLabel : UILabel = null with get, set
 
 [<Register ("SubtitleCell")>]
 type SubtitleCell (handle : IntPtr) =
-    inherit IndexCell (handle)
+    inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("CaptionCell")>]
 type CaptionCell (handle : IntPtr) =
-    inherit IndexCell (handle)
+    inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("ArticleView")>]
@@ -54,14 +53,14 @@ type tvOSArticleView (handle : IntPtr) =
         base.ViewDidLoad ()
         presenter <- ArticlePresenter (articleHead,
                                        fetchArticle Common.Network.fetchString,
-                                       fetchSecImages cachedFetchImage,
+                                       fetchSecImages Common.tvOS.cachedFetchImage,
                                        this)
         this.NavigationItem.Title <- presenter.Title
 
     override this.RowsInSection (tableView, section) =
         presenter.CellsCount |> nint
 
-    member private this.BuildCell (cell : IndexCell) =
+    member private this.BuildCell (cell : Common.tvOS.IndexCell) =
         let vm = presenter.GetCellViewModel cell.Index
         match vm with
         | Title str ->
@@ -71,7 +70,7 @@ type tvOSArticleView (handle : IntPtr) =
         | Para str ->
             (cell :?> ParaCell).Label.Text <- str
         | SecImage imageOpt ->
-            (cell :?> SecImageCell).MyImageView |> updateImage imageOpt
+            (cell :?> SecImageCell).MyImageView |> Common.tvOS.updateImage imageOpt
         | Subtitle str ->
             (cell :?> SubtitleCell).Label.Text <- str
         | Caption str ->
@@ -88,7 +87,7 @@ type tvOSArticleView (handle : IntPtr) =
             | SecImage      _ -> "SecImageCell"
             | Subtitle      _ -> "SubtitleCell"
             | Caption       _ -> "CaptionCell"
-        let cell = tableView.DequeueReusableCell identifier :?> IndexCell
+        let cell = tableView.DequeueReusableCell identifier :?> Common.tvOS.IndexCell
         cell.Index <- indexPath.Row
         this.BuildCell cell
 
@@ -99,10 +98,10 @@ type tvOSArticleView (handle : IntPtr) =
 
     interface ArticleView with
         member this.ShowLoading message =
-            showToast this message
+            Common.tvOS.showToast this message
 
         member this.ShowError title message =
-            showAlert this title message
+            Common.tvOS.showAlert this title message
 
         member this.Back () =
             this.InvokeOnMainThread (fun _ ->
@@ -117,7 +116,7 @@ type tvOSArticleView (handle : IntPtr) =
         member this.RefreshCell index =
             this.InvokeOnMainThread (fun _ ->
                 for cell in this.TableView.VisibleCells do
-                    let cell = cell :?> IndexCell
+                    let cell = cell :?> Common.tvOS.IndexCell
                     if cell.Index = index then
                         this.BuildCell cell |> ignore
             )
