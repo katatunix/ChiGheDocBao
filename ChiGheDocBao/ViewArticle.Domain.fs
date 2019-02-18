@@ -106,7 +106,9 @@ let fetchArticle (fetchString : FetchString) : FetchArticle =
         let! htmlString = fetchString articleUrl
         let! doc = parseHtmlDoc htmlString
 
-        let! article = getHead doc "article.content_detail"
+        let! article =
+            getHead doc "article.content_detail"
+            |> AsyncResult.mapError (fun _ -> "Chưa hỗ trợ đọc bài viết dạng này")
 
         let sections = parseSections article
 
