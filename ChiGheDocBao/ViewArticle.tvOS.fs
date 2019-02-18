@@ -35,6 +35,11 @@ type SubtitleCell (handle : IntPtr) =
     inherit IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
+[<Register ("CaptionCell")>]
+type CaptionCell (handle : IntPtr) =
+    inherit IndexCell (handle)
+    [<Outlet>] member val Label : UILabel = null with get, set
+
 [<Register ("ArticleView")>]
 type tvOSArticleView (handle : IntPtr) =
     inherit UITableViewController (handle)
@@ -65,12 +70,12 @@ type tvOSArticleView (handle : IntPtr) =
             (cell :?> DescriptionCell).Label.Text <- str
         | Para str ->
             (cell :?> ParaCell).Label.Text <- str
-        | SecImage (imageOpt, caption) ->
-            let cell = cell :?> SecImageCell
-            cell.MyImageView |> updateImage imageOpt
-            cell.CaptionLabel.Text <- caption
+        | SecImage imageOpt ->
+            (cell :?> SecImageCell).MyImageView |> updateImage imageOpt
         | Subtitle str ->
             (cell :?> SubtitleCell).Label.Text <- str
+        | Caption str ->
+            (cell :?> CaptionCell).Label.Text <- str
         cell :> UITableViewCell
 
     override this.GetCell (tableView, indexPath) =
@@ -82,6 +87,7 @@ type tvOSArticleView (handle : IntPtr) =
             | Para          _ -> "ParaCell"
             | SecImage      _ -> "SecImageCell"
             | Subtitle      _ -> "SubtitleCell"
+            | Caption       _ -> "CaptionCell"
         let cell = tableView.DequeueReusableCell identifier :?> IndexCell
         cell.Index <- indexPath.Row
         this.BuildCell cell

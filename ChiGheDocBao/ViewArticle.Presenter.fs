@@ -17,7 +17,8 @@ type CellViewModel =
     | Title of string
     | Description of string
     | Para of string
-    | SecImage of (Image option) * string
+    | SecImage of Image option
+    | Caption of string
     | Subtitle of string
 
 [<AllowNullLiteral>]
@@ -72,12 +73,14 @@ type ArticlePresenter (articleHead : ArticleHead,
             let sectionIndex = index - 2
             match a.Sections.[sectionIndex] with
             | Section.Para str ->
-                Para str
-            | Section.SecImage (url, caption) ->
+                Para str.Value
+            | Section.SecImage url ->
                 let imageOpt = match secImages.TryGetValue sectionIndex with true, image -> Some image | _ -> None
-                SecImage (imageOpt, caption)
+                SecImage imageOpt
             | Section.Subtitle str ->
-                Subtitle str
+                Subtitle str.Value
+            | Section.Caption str ->
+                Caption str.Value
 
     member this.OnBack () =
         stopFetchSecImages ()
