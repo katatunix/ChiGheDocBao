@@ -156,15 +156,15 @@
                                     <outlet property="Label" destination="10432" id="name-outlet-10432"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9635" reuseIdentifier="DescriptionCell" customClass="DescriptionCell">
-                                <rect key="frame" x="0.0" y="195" width="1700" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9635" reuseIdentifier="DescriptionCell" customClass="DescriptionCell" rowHeight="94">
+                                <rect key="frame" x="0.0" y="195" width="1700" height="94"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9635" id="9636">
-                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="94"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="11603" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0">
-                                            <rect key="frame" x="16" y="0.0" width="1668" height="44"/>
+                                            <rect key="frame" x="16" y="8" width="1668" height="78"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                             <color key="textColor" colorSpace="calibratedWhite" white="0.333333333333333" alpha="1"/>
                                             <nil key="highlightedColor"/>
@@ -172,8 +172,8 @@
                                     </subviews>
                                     <constraints>
                                         <constraint id="11604" firstItem="11603" firstAttribute="leading" secondItem="9636" secondAttribute="leading" constant="16"/>
-                                        <constraint id="11605" firstItem="11603" firstAttribute="top" secondItem="9636" secondAttribute="top"/>
-                                        <constraint id="11606" firstAttribute="bottom" secondItem="11603" secondAttribute="bottom"/>
+                                        <constraint id="11605" firstItem="11603" firstAttribute="top" secondItem="9636" secondAttribute="top" constant="8"/>
+                                        <constraint id="11606" firstAttribute="bottom" secondItem="11603" secondAttribute="bottom" constant="8"/>
                                         <constraint id="11607" firstAttribute="trailing" secondItem="11603" secondAttribute="trailing" constant="16"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -181,15 +181,15 @@
                                     <outlet property="Label" destination="11603" id="name-outlet-11603"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9637" reuseIdentifier="ParaCell" customClass="ParaCell">
-                                <rect key="frame" x="0.0" y="253" width="1700" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9637" reuseIdentifier="ParaCell" customClass="ParaCell" rowHeight="95">
+                                <rect key="frame" x="0.0" y="303" width="1700" height="95"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9637" id="9638">
-                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="95"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Para" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="12048" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0">
-                                            <rect key="frame" x="16" y="0.0" width="1668" height="44"/>
+                                            <rect key="frame" x="16" y="8" width="1668" height="79"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -197,8 +197,8 @@
                                     </subviews>
                                     <constraints>
                                         <constraint id="12049" firstItem="12048" firstAttribute="leading" secondItem="9638" secondAttribute="leading" constant="16"/>
-                                        <constraint id="12050" firstItem="12048" firstAttribute="top" secondItem="9638" secondAttribute="top"/>
-                                        <constraint id="12051" firstAttribute="bottom" secondItem="12048" secondAttribute="bottom"/>
+                                        <constraint id="12050" firstItem="12048" firstAttribute="top" secondItem="9638" secondAttribute="top" constant="8"/>
+                                        <constraint id="12051" firstAttribute="bottom" secondItem="12048" secondAttribute="bottom" constant="8"/>
                                         <constraint id="12052" firstAttribute="trailing" secondItem="12048" secondAttribute="trailing" constant="16"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -206,49 +206,35 @@
                                     <outlet property="Label" destination="12048" id="name-outlet-12048"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9642" reuseIdentifier="SecImageCell" customClass="SecImageCell" rowHeight="366">
-                                <rect key="frame" x="0.0" y="311" width="1700" height="366"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9642" reuseIdentifier="SecImageCell" customClass="SecImageCell" rowHeight="494">
+                                <rect key="frame" x="0.0" y="412" width="1700" height="494"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9642" id="9643">
-                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="366"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="494"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" id="14873" translatesAutoresizingMaskIntoConstraints="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="1700" height="366"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="14872" translatesAutoresizingMaskIntoConstraints="NO" misplaced="YES">
-                                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="238"/>
-                                                    <color key="backgroundColor" colorSpace="calibratedWhite" white="0" alpha="1"/>
-                                                    <constraints>
-                                                        <constraint id="14878" firstAttribute="height" constant="300"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <view contentMode="scaleToFill" id="15645" translatesAutoresizingMaskIntoConstraints="NO">
-                                                    <rect key="frame" x="0.0" y="238" width="1700" height="128"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Caption" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="14871" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0">
-                                                            <rect key="frame" x="16" y="16" width="1700" height="34"/>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                                            <color key="textColor" colorSpace="calibratedWhite" white="0.333333333333333" alpha="1"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint id="15646" firstItem="14871" firstAttribute="leading" secondItem="15645" secondAttribute="leading" constant="16"/>
-                                                        <constraint id="15647" firstItem="14871" firstAttribute="top" secondItem="15645" secondAttribute="top" constant="8"/>
-                                                        <constraint id="15648" firstAttribute="bottom" secondItem="14871" secondAttribute="bottom" constant="8"/>
-                                                        <constraint id="15649" firstItem="14871" firstAttribute="trailing" secondItem="15645" secondAttribute="trailing" constant="16"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
-                                        </stackView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="14872" translatesAutoresizingMaskIntoConstraints="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="1700" height="444"/>
+                                            <color key="backgroundColor" colorSpace="calibratedWhite" white="0" alpha="1"/>
+                                            <constraints>
+                                                <constraint id="14878" firstAttribute="height" constant="444"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Caption" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="14871" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" textAlignment="center">
+                                            <rect key="frame" x="16" y="452" width="1668" height="34"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <color key="textColor" colorSpace="calibratedWhite" white="0.333333333333333" alpha="1"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint id="14876" firstItem="14873" firstAttribute="top" secondItem="9643" secondAttribute="top"/>
-                                        <constraint id="14877" firstAttribute="bottom" secondItem="14873" secondAttribute="bottom"/>
-                                        <constraint id="14879" firstItem="14873" firstAttribute="leading" secondItem="9643" secondAttribute="leading"/>
-                                        <constraint id="14881" firstAttribute="trailing" secondItem="14873" secondAttribute="trailing"/>
+                                        <constraint id="18264" firstItem="14872" firstAttribute="leading" secondItem="9643" secondAttribute="leading"/>
+                                        <constraint id="18516" firstItem="14872" firstAttribute="trailing" secondItem="9643" secondAttribute="trailing"/>
+                                        <constraint id="18517" firstItem="14872" firstAttribute="top" secondItem="9643" secondAttribute="top"/>
+                                        <constraint id="18518" firstItem="14871" firstAttribute="leading" secondItem="9643" secondAttribute="leading" constant="16"/>
+                                        <constraint id="18776" firstItem="14871" firstAttribute="trailing" secondItem="9643" secondAttribute="trailing" constant="-16"/>
+                                        <constraint id="19036" firstItem="14871" firstAttribute="top" secondItem="14872" secondAttribute="bottom" constant="8"/>
+                                        <constraint id="19037" firstAttribute="bottom" secondItem="14871" secondAttribute="bottom" constant="8"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -257,7 +243,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9665" reuseIdentifier="SubtitleCell" customClass="SubtitleCell">
-                                <rect key="frame" x="0.0" y="691" width="1700" height="44"/>
+                                <rect key="frame" x="0.0" y="920" width="1700" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9665" id="9666">
                                     <rect key="frame" x="0.0" y="0.0" width="1700" height="44"/>

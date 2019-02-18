@@ -40,7 +40,7 @@ module Stream =
                 | Some (index, item) ->
                     let result = map item
                     if still.Value then
-                        event.Trigger (index, result)
+                        event.Trigger (index, item, result)
                         loop ()
             loop ()
             

@@ -81,7 +81,7 @@ let fetchThumbnails (fetchImage : FetchImage) : FetchThumbnails =
             |> Stream.create 4 (fun ah -> hardFetchImage ah.ImageUrl)
         let imageObservable =
             stream.Observable
-            |> Observable.choose (fun (index, imageResult) ->
+            |> Observable.choose (fun (index, _, imageResult) ->
                 match imageResult with
                 | Ok image -> Some (index, image)
                 | Error _ -> None

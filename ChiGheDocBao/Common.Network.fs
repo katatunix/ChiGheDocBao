@@ -11,7 +11,7 @@ let fetchString : FetchString = fun (Url url) ->
             let! str = Http.AsyncRequestString (url, timeout = 10000, responseEncodingOverride = "UTF-8")
             return Ok str
         with ex ->
-            return Error <| String.Format ("Could not download string [{0}] due to: {1}", url, ex.Message)
+            return Error ex.Message
     }
 
 let fetchImage : FetchImage = fun (Url url) ->
@@ -21,4 +21,4 @@ let fetchImage : FetchImage = fun (Url url) ->
         | Text _ -> Error <| String.Format ("Not an image: {0}", url)
         | Binary bytes -> Ok <| Image bytes
     with ex ->
-        Error <| String.Format ("Could not download image [{0}] due to: {1}", url, ex.Message)
+        Error ex.Message

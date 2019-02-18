@@ -10,18 +10,12 @@ open Presenter
 open Common.tvOS
 open ViewArticle.tvOS
 
-let private cachedDownloadImage = Common.Network.fetchImage |> Utils.memo
-
 [<Register ("ArticleHeadCell")>]
 type ArticleHeadCell (handle : IntPtr) =
-    inherit UITableViewCell (handle)
-    member val Index : int = 0 with get, set
-    [<Outlet>]
-    member val TitleLabel : UILabel = null with get, set
-    [<Outlet>]
-    member val DescriptionLabel : UILabel = null with get, set
-    [<Outlet>]
-    member val Thumbnail : UIImageView = null with get, set
+    inherit IndexCell (handle)
+    [<Outlet>] member val TitleLabel : UILabel = null with get, set
+    [<Outlet>] member val DescriptionLabel : UILabel = null with get, set
+    [<Outlet>] member val Thumbnail : UIImageView = null with get, set
 
 [<Register ("CategoryView")>]
 type tvOSCategoryView (handle : IntPtr) =
@@ -35,37 +29,31 @@ type tvOSCategoryView (handle : IntPtr) =
 
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
-
-        this.NavigationItem.Title <- category.Name
-        presenter <- CategoryPresenter (category.Url,
+        presenter <- CategoryPresenter (category,
                                         fetchArticleHeads Common.Network.fetchString,
-                                        fetchThumbnails cachedDownloadImage,
+                                        fetchThumbnails cachedFetchImage,
                                         this)
+        this.NavigationItem.Title <- presenter.Title
 
     override this.RowsInSection (tableView, section) =
-        presenter.GetArticleHeadsCount () |> nint
+        presenter.CellsCount |> nint
 
-    member private this.UpdateCell (cell : ArticleHeadCell) =
-        let vm = presenter.GetArticleHead cell.Index
+    member private this.BuildCell (cell : ArticleHeadCell) =
+        let vm = presenter.GetCellViewModel cell.Index
 
         cell.TitleLabel.Text <- vm.Title
         cell.DescriptionLabel.Text <- vm.Description
-
-        match vm.Image with
-        | Some image ->
-            cell.Thumbnail.Image <- uiImage image
-        | None ->
-            cell.Thumbnail.Image <- null
+        cell.Thumbnail |> updateImage vm.Image
 
         cell :> UITableViewCell
 
     override this.GetCell (tableView, indexPath) =
         let cell = tableView.DequeueReusableCell "ArticleHeadCell" :?> ArticleHeadCell
         cell.Index <- indexPath.Row
-        this.UpdateCell cell
+        this.BuildCell cell
 
     override this.RowSelected (tableView, indexPath) =
-        presenter.OnArticleHeadSelected indexPath.Row
+        presenter.OnCellSelected indexPath.Row
 
     override this.WillMoveToParentViewController vc =
         base.WillMoveToParentViewController vc
@@ -84,17 +72,17 @@ type tvOSCategoryView (handle : IntPtr) =
                 this.NavigationController.PopViewController false |> ignore
             )
 
-        member this.OnAhsFetched () =
+        member this.RefreshAllCells () =
             this.InvokeOnMainThread (fun _ ->
                 this.TableView.ReloadData ()
             )
 
-        member this.OnThumbnailFetched index =
+        member this.RefreshCell index =
             this.InvokeOnMainThread (fun _ ->
                 for cell in this.TableView.VisibleCells do
                     let cell = cell :?> ArticleHeadCell
                     if cell.Index = index then
-                        this.UpdateCell cell |> ignore
+                        this.BuildCell cell |> ignore
             )
 
         member this.PushArticleView articleHead =

@@ -1,6 +1,7 @@
 ﻿module ChiGheDocBao.ViewArticle.Presenter
 
 open System
+open System.Collections.Concurrent
 open ChiGheDocBao
 open Common.Domain
 open Domain
@@ -9,27 +10,30 @@ type ArticleView =
     abstract ShowLoading : message:string -> Async<Async<unit>>
     abstract ShowError : title:string -> content:string -> Async<unit>
     abstract Back : unit -> unit
-    abstract OnArticleFetched : unit -> unit
-    abstract SetTitle : string -> unit
+    abstract RefreshAllCells : unit -> unit
+    abstract RefreshCell : int -> unit
 
 type CellViewModel =
     | Title of string
     | Description of string
     | Para of string
-    | SecImage of string
+    | SecImage of (Image option) * string
     | Subtitle of string
 
 [<AllowNullLiteral>]
 type ArticlePresenter (articleHead : ArticleHead,
-                       downloadArticle : FetchArticle,
+                       fetchArticle : FetchArticle,
+                       fetchSecImages : FetchSecImages,
                        view : ArticleView) =
     let mutable article : Article option = None
+    let secImages = ConcurrentDictionary<int, Image> ()
+    let mutable stopFetchSecImages = id
 
-    do view.SetTitle articleHead.Title
+    do Console.WriteLine articleHead.Link
 
     do Async.Start <| async {
         let! hideLoading = view.ShowLoading "Chi ghẻ đang quậy, vui lòng chờ tí"
-        let! articleResult = downloadArticle articleHead.Link
+        let! articleResult = fetchArticle articleHead.Link
         do! hideLoading
         match articleResult with
         | Error msg ->
@@ -37,10 +41,21 @@ type ArticlePresenter (articleHead : ArticleHead,
             view.Back ()
         | Ok a ->
             article <- Some a
-            view.OnArticleFetched ()
+            view.RefreshAllCells ()
+            let stream = fetchSecImages a.Sections
+            let dis =
+                stream.Observable
+                |> Observable.subscribe (fun (index, image) ->
+                    secImages.[index] <- image
+                    view.RefreshCell (index + 2)
+                )
+            stopFetchSecImages <- stream.Stop >> dis.Dispose
+            stream.Start ()
     }
 
-    member this.GetCellCount () =
+    member this.Title = articleHead.Title
+
+    member this.CellsCount =
         match article with
         | None -> 0
         | Some a ->
@@ -48,13 +63,21 @@ type ArticlePresenter (articleHead : ArticleHead,
             + 1 // description
             + a.Sections.Length
 
-    member this.GetCell index =
+    member this.GetCellViewModel index =
         let a = article.Value
         match index with
         | 0 -> Title articleHead.Title
         | 1 -> Description <| String.Format ("{0} | {1}", articleHead.DateTime.ToString "d/M/yyyy HH:mm", articleHead.Description)
         | _ ->
-            match a.Sections.[index - 2] with
-            | Section.Para x -> Para x
-            | Section.SecImage (url, caption) -> SecImage (caption)
-            | Section.Subtitle x -> Subtitle x
+            let sectionIndex = index - 2
+            match a.Sections.[sectionIndex] with
+            | Section.Para str ->
+                Para str
+            | Section.SecImage (url, caption) ->
+                let imageOpt = match secImages.TryGetValue sectionIndex with true, image -> Some image | _ -> None
+                SecImage (imageOpt, caption)
+            | Section.Subtitle str ->
+                Subtitle str
+
+    member this.OnBack () =
+        stopFetchSecImages ()

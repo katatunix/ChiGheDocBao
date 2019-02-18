@@ -11,28 +11,28 @@ open Common.tvOS
 
 [<Register ("TitleCell")>]
 type TitleCell (handle : IntPtr) =
-    inherit UITableViewCell (handle)
+    inherit IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("DescriptionCell")>]
 type DescriptionCell (handle : IntPtr) =
-    inherit UITableViewCell (handle)
+    inherit IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("ParaCell")>]
 type ParaCell (handle : IntPtr) =
-    inherit UITableViewCell (handle)
+    inherit IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("SecImageCell")>]
 type SecImageCell (handle : IntPtr) =
-    inherit UITableViewCell (handle)
+    inherit IndexCell (handle)
     [<Outlet>] member val MyImageView : UIImageView = null with get, set
     [<Outlet>] member val CaptionLabel : UILabel = null with get, set
 
 [<Register ("SubtitleCell")>]
 type SubtitleCell (handle : IntPtr) =
-    inherit UITableViewCell (handle)
+    inherit IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
 [<Register ("ArticleView")>]
@@ -47,34 +47,49 @@ type tvOSArticleView (handle : IntPtr) =
 
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
-        presenter <- ArticlePresenter (articleHead, fetchArticle Common.Network.fetchString, this)
+        presenter <- ArticlePresenter (articleHead,
+                                       fetchArticle Common.Network.fetchString,
+                                       fetchSecImages cachedFetchImage,
+                                       this)
+        this.NavigationItem.Title <- presenter.Title
 
     override this.RowsInSection (tableView, section) =
-        presenter.GetCellCount () |> nint
+        presenter.CellsCount |> nint
 
-    override this.GetCell (tableView, indexPath) =
-        let vm = presenter.GetCell indexPath.Row
+    member private this.BuildCell (cell : IndexCell) =
+        let vm = presenter.GetCellViewModel cell.Index
         match vm with
         | Title str ->
-            let cell = tableView.DequeueReusableCell "TitleCell" :?> TitleCell
-            cell.Label.Text <- str
-            cell :> UITableViewCell
+            (cell :?> TitleCell).Label.Text <- str
         | Description str ->
-            let cell = tableView.DequeueReusableCell "DescriptionCell" :?> DescriptionCell
-            cell.Label.Text <- str
-            cell :> UITableViewCell
+            (cell :?> DescriptionCell).Label.Text <- str
         | Para str ->
-            let cell = tableView.DequeueReusableCell "ParaCell" :?> ParaCell
-            cell.Label.Text <- str
-            cell :> UITableViewCell
-        | SecImage str ->
-            let cell = tableView.DequeueReusableCell "SecImageCell" :?> SecImageCell
-            cell.CaptionLabel.Text <- str
-            cell :> UITableViewCell
+            (cell :?> ParaCell).Label.Text <- str
+        | SecImage (imageOpt, caption) ->
+            let cell = cell :?> SecImageCell
+            cell.MyImageView |> updateImage imageOpt
+            cell.CaptionLabel.Text <- caption
         | Subtitle str ->
-            let cell = tableView.DequeueReusableCell "SubtitleCell" :?> SubtitleCell
-            cell.Label.Text <- str
-            cell :> UITableViewCell
+            (cell :?> SubtitleCell).Label.Text <- str
+        cell :> UITableViewCell
+
+    override this.GetCell (tableView, indexPath) =
+        let vm = presenter.GetCellViewModel indexPath.Row
+        let identifier =
+            match vm with
+            | Title         _ -> "TitleCell"
+            | Description   _ -> "DescriptionCell"
+            | Para          _ -> "ParaCell"
+            | SecImage      _ -> "SecImageCell"
+            | Subtitle      _ -> "SubtitleCell"
+        let cell = tableView.DequeueReusableCell identifier :?> IndexCell
+        cell.Index <- indexPath.Row
+        this.BuildCell cell
+
+    override this.WillMoveToParentViewController vc =
+        base.WillMoveToParentViewController vc
+        if not (isNull presenter) then
+            presenter.OnBack ()
 
     interface ArticleView with
         member this.ShowLoading message =
@@ -88,12 +103,15 @@ type tvOSArticleView (handle : IntPtr) =
                 this.NavigationController.PopViewController false |> ignore
             )
 
-        member this.OnArticleFetched () =
+        member this.RefreshAllCells () =
             this.InvokeOnMainThread (fun _ ->
                 this.TableView.ReloadData ()
             )
 
-        member this.SetTitle str =
+        member this.RefreshCell index =
             this.InvokeOnMainThread (fun _ ->
-                this.NavigationItem.Title <- str
+                for cell in this.TableView.VisibleCells do
+                    let cell = cell :?> IndexCell
+                    if cell.Index = index then
+                        this.BuildCell cell |> ignore
             )

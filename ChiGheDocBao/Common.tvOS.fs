@@ -5,6 +5,9 @@ open System.Threading
 open UIKit
 open Foundation
 open ChiGheDocBao
+open Common.Domain
+
+let cachedFetchImage : FetchImage = Common.Network.fetchImage |> Utils.memo
 
 let runOnViewThread (vc : UIViewController) f =
     fun x ->
@@ -56,8 +59,12 @@ let showToast (vc : UIViewController) content =
         )
     )
 
-let uiImage (Common.Domain.Image bytes) =
-    UIImage.LoadFromData (NSData.FromArray bytes)
+let updateImage (image : Image option) (view : UIImageView) =
+    match image with
+    | Some (Image bytes) ->
+        view.Image <- UIImage.LoadFromData (NSData.FromArray bytes)
+    | None ->
+        view.Image <- null
 
 type EstimatedTableViewController (handle : IntPtr) =
     inherit UITableViewController (handle)
@@ -71,3 +78,7 @@ type EstimatedTableViewController (handle : IntPtr) =
         match heightCache.TryGetValue indexPath.Row with
         | true, height -> height
         | _ -> UITableView.AutomaticDimension
+        
+type IndexCell (handle : IntPtr) =
+    inherit UITableViewCell (handle)
+    member val Index : int = 0 with get, set

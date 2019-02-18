@@ -17,12 +17,12 @@ type CategoryView =
     abstract ShowLoading : message:string -> Async<Async<unit>>
     abstract ShowError : title:string -> content:string -> Async<unit>
     abstract Back : unit -> unit
-    abstract OnAhsFetched : unit -> unit
-    abstract OnThumbnailFetched : int -> unit
+    abstract RefreshAllCells : unit -> unit
+    abstract RefreshCell : int -> unit
     abstract PushArticleView : ArticleHead -> unit
 
 [<AllowNullLiteral>]
-type CategoryPresenter (categoryUrl : Url,
+type CategoryPresenter (category : Category,
                         fetchArticleHeads : FetchArticleHeads,
                         fetchThumbnails : FetchThumbnails,
                         view : CategoryView) =
@@ -32,7 +32,7 @@ type CategoryPresenter (categoryUrl : Url,
 
     do Async.Start <| async {
         let! hideLoading = view.ShowLoading "Chi ghẻ đang quậy, vui lòng chờ tí"
-        let! ahsResult = fetchArticleHeads categoryUrl
+        let! ahsResult = fetchArticleHeads category.Url
         do! hideLoading
         match ahsResult with
         | Error msg ->
@@ -40,22 +40,23 @@ type CategoryPresenter (categoryUrl : Url,
             view.Back ()
         | Ok ahs ->
             articleHeads <- ahs
-            view.OnAhsFetched ()
+            view.RefreshAllCells ()
             let stream = fetchThumbnails ahs
             let dis =
                 stream.Observable
                 |> Observable.subscribe (fun (index, image) ->
                     thumbnails.[index] <- image
-                    view.OnThumbnailFetched index
+                    view.RefreshCell index
                 )
             stopFetchThumbnails <- stream.Stop >> dis.Dispose
             stream.Start ()
     }
 
-    member this.GetArticleHeadsCount () =
-        articleHeads.Length
+    member this.Title = category.Name
 
-    member this.GetArticleHead index =
+    member this.CellsCount = articleHeads.Length
+
+    member this.GetCellViewModel index =
         let article = articleHeads.[index]
         let vm : ArticleHeadViewModel = {
             Title = article.Title
@@ -64,7 +65,7 @@ type CategoryPresenter (categoryUrl : Url,
         }
         vm
 
-    member this.OnArticleHeadSelected index =
+    member this.OnCellSelected index =
         view.PushArticleView articleHeads.[index]
 
     member this.OnBack () =

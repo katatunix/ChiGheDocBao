@@ -14,6 +14,8 @@ type Article = {
 
 type FetchArticle = Url -> AsyncResult<Article, string>
 
+type FetchSecImages = Section [] -> Stream<int * Image>
+
 // Impl
 
 open FSharp.Data
@@ -97,3 +99,31 @@ let fetchArticle (fetchString : FetchString) : FetchArticle =
 
         return { Sections = sections }
     }
+
+let fetchSecImages (fetchImage : FetchImage) : FetchSecImages =
+    fun sections ->
+        let hardFetchImage = fetchImage |> Utils.hard 3
+
+        let imageUrls =
+            sections
+            |> Seq.mapi (fun i section -> i, section)
+            |> Seq.choose (fun (i, section) ->
+                match section with
+                | SecImage (url, _) -> Some (i, url)
+                | _ -> None
+            )
+
+        let stream =
+            imageUrls
+            |> Stream.create 4 (fun (i, url) -> hardFetchImage url)
+
+        let imageObservable =
+            stream.Observable
+            |> Observable.choose (fun (_, (i, _), imageResult) ->
+                match imageResult with
+                | Ok image -> Some (i, image)
+                | Error _ -> None
+            )
+
+        stream
+        |> Stream.changeObservable imageObservable
