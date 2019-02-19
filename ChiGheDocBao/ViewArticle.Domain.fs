@@ -30,21 +30,19 @@ type FetchSecImages = Section [] -> Stream<int * Image>
 
 open FSharp.Data
 
-type private HtmlDoc = HtmlProvider<"types/article.html">
-
-let private parseHtmlDoc htmlString : AsyncResult<HtmlDoc, string> =
+let private parseHtmlDoc (html : string) : AsyncResult<HtmlDocument, string> =
     try
-        Ok <| HtmlDoc.Parse htmlString
+        Ok <| HtmlDocument.Parse html
     with ex ->
         Error <| "Could not parse html: " + ex.Message
     |> AsyncResult.ofResult
 
-let private getHead (doc : HtmlDoc) cssSelector =
-    doc.Html.CssSelect cssSelector
+let private getHead (doc : HtmlDocument) cssSelector =
+    doc.Html().CssSelect cssSelector
     |> List.tryHead
     |> Result.ofOption ("Could not select: " + cssSelector)
     |> AsyncResult.ofResult
-    
+
 let private attr name (node : HtmlNode) = node.AttributeValue name
 
 let private (|NormalArticle|SlideshowArticle|) (article : HtmlNode) =
