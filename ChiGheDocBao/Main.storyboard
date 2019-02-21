@@ -8,7 +8,7 @@
         <!--View Controller-->
         <scene sceneID="679">
             <objects>
-                <tableViewController id="680" sceneMemberID="viewController" customClass="CategoryListView">
+                <tableViewController id="680" sceneMemberID="viewController" customClass="CategoryCatalogView">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="66" sectionFooterHeight="66" id="681">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -59,7 +59,7 @@
         </scene>
         <scene sceneID="4840">
             <objects>
-                <tableViewController id="4841" sceneMemberID="viewController" customClass="CategoryView" storyboardIdentifier="CategoryView">
+                <tableViewController id="4841" sceneMemberID="viewController" customClass="CategoryContentView" storyboardIdentifier="CategoryContentView">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="66" sectionFooterHeight="66" id="4842" estimatedRowHeight="-1">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -126,7 +126,7 @@
         </scene>
         <scene sceneID="9626">
             <objects>
-                <tableViewController id="9627" sceneMemberID="viewController" customClass="ArticleView" storyboardIdentifier="ArticleView">
+                <tableViewController id="9627" sceneMemberID="viewController" customClass="ArticleContentView" storyboardIdentifier="ArticleContentView">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="66" sectionFooterHeight="66" id="9628" estimatedRowHeight="-1">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -265,7 +265,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Caption" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="14871" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" textAlignment="natural">
-                                            <rect key="frame" x="16" y="8" width="1668" height="98"/>
+                                            <rect key="frame" x="16" y="8" width="1668" height="90"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <color key="textColor" colorSpace="calibratedWhite" white="0.333333333333333" alpha="1"/>
                                             <nil key="highlightedColor"/>

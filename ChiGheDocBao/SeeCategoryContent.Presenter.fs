@@ -1,4 +1,4 @@
-﻿module ChiGheDocBao.ViewCategory.Presenter
+﻿module ChiGheDocBao.SeeCategoryContent.Presenter
 
 open System
 open System.Collections.Concurrent
@@ -12,22 +12,23 @@ type ArticleHeadViewModel = {
     Image : Image option
 }
 
-type CategoryView =
+type CategoryContentView =
     abstract ShowLoading : message:string -> Async<Async<unit>>
     abstract ShowError : title:string -> content:string -> Async<unit>
     abstract Back : unit -> unit
     abstract RefreshAllCells : unit -> unit
     abstract RefreshCell : int -> unit
-    abstract PushArticleView : ArticleHead -> unit
+    abstract ShowArticleContent : ArticleHead -> unit
 
 [<AllowNullLiteral>]
-type CategoryPresenter (category : Category,
-                        fetchArticleHeads : FetchArticleHeads,
-                        fetchThumbnails : FetchThumbnails,
-                        view : CategoryView) =
+type CategoryContentPresenter (category : Category,
+                               fetchArticleHeads : FetchArticleHeads,
+                               fetchThumbnails : FetchThumbnails,
+                               view : CategoryContentView) =
+
     let mutable articleHeads : ArticleHead [] = Array.empty
     let thumbnails = ConcurrentDictionary<int, Image> ()
-    let mutable stopFetchThumbnails = id
+    let mutable stopFetchingThumbnails = id
 
     do Async.Start <| async {
         let! hideLoading = view.ShowLoading "Chi ghẻ đang quậy, vui lòng chờ tí"
@@ -47,13 +48,13 @@ type CategoryPresenter (category : Category,
                     thumbnails.[index] <- image
                     view.RefreshCell index
                 )
-            stopFetchThumbnails <- stream.Stop >> dis.Dispose
+            stopFetchingThumbnails <- stream.Stop >> dis.Dispose
             stream.Start ()
     }
 
     member this.Title = category.Name
 
-    member this.CellsCount = articleHeads.Length
+    member this.Length = articleHeads.Length
 
     member this.GetCellViewModel index =
         let article = articleHeads.[index]
@@ -65,7 +66,7 @@ type CategoryPresenter (category : Category,
         vm
 
     member this.OnCellSelected index =
-        view.PushArticleView articleHeads.[index]
+        view.ShowArticleContent articleHeads.[index]
 
     member this.OnBack () =
-        stopFetchThumbnails ()
+        stopFetchingThumbnails ()

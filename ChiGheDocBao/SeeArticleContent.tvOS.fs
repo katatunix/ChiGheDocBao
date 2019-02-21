@@ -1,11 +1,9 @@
-﻿module ChiGheDocBao.ViewArticle.tvOS
+﻿module ChiGheDocBao.SeeArticleContent.tvOS
 
 open System
 open Foundation
 open UIKit
 open ChiGheDocBao
-open Common.Domain
-open Domain
 open Presenter
 
 [<Register ("TitleCell")>]
@@ -39,26 +37,26 @@ type CaptionCell (handle : IntPtr) =
     inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
-[<Register ("ArticleView")>]
-type tvOSArticleView (handle : IntPtr) =
+[<Register ("ArticleContentView")>]
+type tvOSArticleContentView (handle : IntPtr) =
     inherit UITableViewController (handle)
 
-    let mutable articleHead = ArticleHead.Dummy
-    let mutable presenter : ArticlePresenter = null
+    let mutable articleHead : Common.Domain.ArticleHead option = None
+    let mutable presenter : ArticleContentPresenter = null
 
-    member this.Init ah =
-        articleHead <- ah
+    member this.Inject ah =
+        articleHead <- Some ah
 
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
-        presenter <- ArticlePresenter (articleHead,
-                                       fetchArticle Common.Network.fetchString,
-                                       fetchSecImages Common.tvOS.cachedFetchImage,
-                                       this)
+        presenter <- ArticleContentPresenter (articleHead.Value,
+                                              Domain.fetchArticleBody Common.Network.fetchString,
+                                              Domain.fetchSecImages Common.tvOS.cachedFetchImage,
+                                              this)
         this.NavigationItem.Title <- presenter.Title
 
     override this.RowsInSection (tableView, section) =
-        presenter.CellsCount |> nint
+        presenter.Length |> nint
 
     member private this.BuildCell (cell : Common.tvOS.IndexCell) =
         let vm = presenter.GetCellViewModel cell.Index
@@ -96,7 +94,8 @@ type tvOSArticleView (handle : IntPtr) =
         if not (isNull presenter) then
             presenter.OnBack ()
 
-    interface ArticleView with
+    interface ArticleContentView with
+
         member this.ShowLoading message =
             Common.tvOS.showToast this message
 

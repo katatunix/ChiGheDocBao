@@ -126,13 +126,13 @@
     <Compile Include="Common.Domain.fs" />
     <Compile Include="Common.Network.fs" />
     <Compile Include="Common.tvOS.fs" />
-    <Compile Include="ViewArticle.Domain.fs" />
-    <Compile Include="ViewArticle.Presenter.fs" />
-    <Compile Include="ViewArticle.tvOS.fs" />
-    <Compile Include="ViewCategory.Domain.fs" />
-    <Compile Include="ViewCategory.Presenter.fs" />
-    <Compile Include="ViewCategory.tvOS.fs" />
-    <Compile Include="ViewCategoryList.fs" />
+    <Compile Include="SeeArticleContent.Domain.fs" />
+    <Compile Include="SeeArticleContent.Presenter.fs" />
+    <Compile Include="SeeArticleContent.tvOS.fs" />
+    <Compile Include="SeeCategoryContent.Domain.fs" />
+    <Compile Include="SeeCategoryContent.Presenter.fs" />
+    <Compile Include="SeeCategoryContent.tvOS.fs" />
+    <Compile Include="SeeCategoryCatalog.fs" />
     <Compile Include="AppDelegate.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>

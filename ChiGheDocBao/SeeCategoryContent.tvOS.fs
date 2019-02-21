@@ -1,11 +1,9 @@
-﻿module ChiGheDocBao.ViewCategory.tvOS
+﻿module ChiGheDocBao.SeeCategoryContent.tvOS
 
 open System
 open Foundation
 open UIKit
 open ChiGheDocBao
-open Common.Domain
-open Domain
 open Presenter
 
 [<Register ("ArticleHeadCell")>]
@@ -15,26 +13,26 @@ type ArticleHeadCell (handle : IntPtr) =
     [<Outlet>] member val DescriptionLabel : UILabel = null with get, set
     [<Outlet>] member val Thumbnail : UIImageView = null with get, set
 
-[<Register ("CategoryView")>]
-type tvOSCategoryView (handle : IntPtr) =
+[<Register ("CategoryContentView")>]
+type tvOSCategoryContentView (handle : IntPtr) =
     inherit UITableViewController (handle)
 
-    let mutable category = Category.Dummy
-    let mutable presenter : CategoryPresenter = null
+    let mutable category : Common.Domain.Category option = None
+    let mutable presenter : CategoryContentPresenter = null
 
-    member this.Init cat =
-        category <- cat
+    member this.Inject cat =
+        category <- Some cat
 
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
-        presenter <- CategoryPresenter (category,
-                                        fetchArticleHeads Common.Network.fetchString,
-                                        fetchThumbnails Common.tvOS.cachedFetchImage,
-                                        this)
+        presenter <- CategoryContentPresenter (category.Value,
+                                               Domain.fetchArticleHeads Common.Network.fetchString,
+                                               Domain.fetchThumbnails Common.tvOS.cachedFetchImage,
+                                               this)
         this.NavigationItem.Title <- presenter.Title
 
     override this.RowsInSection (tableView, section) =
-        presenter.CellsCount |> nint
+        presenter.Length |> nint
 
     member private this.BuildCell (cell : ArticleHeadCell) =
         let vm = presenter.GetCellViewModel cell.Index
@@ -58,7 +56,7 @@ type tvOSCategoryView (handle : IntPtr) =
         if not (isNull presenter) then
             presenter.OnBack ()
 
-    interface CategoryView with
+    interface CategoryContentView with
 
         member this.ShowLoading message =
             Common.tvOS.showToast this message
@@ -84,7 +82,8 @@ type tvOSCategoryView (handle : IntPtr) =
                         this.BuildCell cell |> ignore
             )
 
-        member this.PushArticleView articleHead =
-            let vc = this.Storyboard.InstantiateViewController "ArticleView" :?> ViewArticle.tvOS.tvOSArticleView
-            vc.Init articleHead
+        member this.ShowArticleContent articleHead =
+            let vc = this.Storyboard.InstantiateViewController "ArticleContentView"
+                        :?> SeeArticleContent.tvOS.tvOSArticleContentView
+            vc.Inject articleHead
             this.NavigationController.PushViewController (vc, false)

@@ -1,4 +1,4 @@
-﻿namespace ChiGheDocBao.ViewCategoryList
+﻿namespace ChiGheDocBao.SeeCategoryCatalog
 
 open ChiGheDocBao
 
@@ -8,7 +8,7 @@ module Domain =
 
     let private cat n u = { Name = n; Url = Url u }
 
-    let vnexpress = [|
+    let private vnexpress = [|
         cat "Tin mới nhất" "https://vnexpress.net/rss/tin-moi-nhat.rss"
         cat "Thời sự"      "https://vnexpress.net/rss/thoi-su.rss"
         cat "Pháp luật"    "https://vnexpress.net/rss/phap-luat.rss"
@@ -28,26 +28,6 @@ module Domain =
         cat "Tâm sự"       "https://vnexpress.net/rss/tam-su.rss"
         cat "Cười"         "https://vnexpress.net/rss/cuoi.rss"
     |]
-
-    let docbao = [|
-        cat "Tin mới nhất" "http://docbao.vn/rss/export/home.rss"
-        cat "Xã hội" "http://docbao.vn/rss/export/xa-hoi.rss"
-        cat "Thế giới" "http://docbao.vn/rss/export/the-gioi.rss"
-        cat "Pháp luật" "http://docbao.vn/rss/export/phap-luat.rss"
-        cat "Kinh tế" "http://docbao.vn/rss/export/kinh-te.rss"
-        cat "Sao 360" "http://docbao.vn/rss/export/sao-360.rss"
-        cat "Giải trí" "http://docbao.vn/rss/export/giai-tri.rss"
-        cat "Gia đình" "http://docbao.vn/rss/export/gia-dinh.rss"
-        cat "Thể thao" "http://docbao.vn/rss/export/the-thao.rss"
-        cat "Video" "http://docbao.vn/rss/export/video.rss"
-        cat "Giới trẻ" "http://docbao.vn/rss/export/gioi-tre.rss"
-        cat "Sức khoẻ " "http://docbao.vn/rss/export/suc-khoe.rss"
-        cat "Quân sự" "http://docbao.vn/rss/export/quan-su.rss"
-        cat "Ô tô xe máy" "http://docbao.vn/rss/export/o-to-xe-may.rss"
-        cat "Đời sống" "http://docbao.vn/rss/export/doi-song.rss"
-        cat "Công nghệ" "http://docbao.vn/rss/export/hi-tech.rss"
-        cat "Doanh nghiệp" "http://docbao.vn/rss/export/doanh-nghiep.rss"
-    |]
     
     let categories = vnexpress
 
@@ -56,17 +36,17 @@ module Presenter =
     open Common.Domain
     open Domain
 
-    type CategoryListView =
-        abstract member PushCategoryView : Category -> unit
+    type CategoryCatalogView =
+        abstract member ShowCategoryContent : Category -> unit
 
     [<AllowNullLiteral>]
-    type CategoryListPresenter (view : CategoryListView) =
+    type CategoryCatalogPresenter (view : CategoryCatalogView) =
         member this.Count = categories.Length
 
         member this.GetCategoryName index = categories.[index].Name
 
         member this.OnCategorySelected index =
-            view.PushCategoryView categories.[index]
+            view.ShowCategoryContent categories.[index]
 
 module tvOS =
 
@@ -75,15 +55,15 @@ module tvOS =
     open UIKit
     open Presenter
 
-    [<Register ("CategoryListView")>]
-    type tvOSCategoryListView (handle : IntPtr) =
+    [<Register ("CategoryCatalogView")>]
+    type tvOSCategoryCatalogView (handle : IntPtr) =
         inherit UITableViewController (handle)
 
-        let mutable presenter : CategoryListPresenter = null
+        let mutable presenter : CategoryCatalogPresenter = null
 
         override this.ViewDidLoad () =
             base.ViewDidLoad ()
-            presenter <- CategoryListPresenter (this)
+            presenter <- CategoryCatalogPresenter (this)
 
         override this.RowsInSection (tableView, section) =
             presenter.Count |> nint
@@ -96,9 +76,10 @@ module tvOS =
         override this.RowSelected (tableView, indexPath) =
             presenter.OnCategorySelected indexPath.Row
 
-        interface CategoryListView with
+        interface CategoryCatalogView with
 
-            member this.PushCategoryView category =
-                let vc = this.Storyboard.InstantiateViewController "CategoryView" :?> ViewCategory.tvOS.tvOSCategoryView
-                vc.Init category
+            member this.ShowCategoryContent category =
+                let vc = this.Storyboard.InstantiateViewController "CategoryContentView"
+                            :?> SeeCategoryContent.tvOS.tvOSCategoryContentView
+                vc.Inject category
                 this.NavigationController.PushViewController (vc, false)

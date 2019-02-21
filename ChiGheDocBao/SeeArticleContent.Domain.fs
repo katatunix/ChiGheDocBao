@@ -1,4 +1,4 @@
-﻿module ChiGheDocBao.ViewArticle.Domain
+﻿module ChiGheDocBao.SeeArticleContent.Domain
 
 open ChiGheDocBao
 open Common.Domain
@@ -18,11 +18,11 @@ type Section =
     | SecImage of Url
     | Caption of ParaString
 
-type Article = {
+type ArticleBody = {
     Sections : Section []
 }
 
-type FetchArticle = Url -> AsyncResult<Article, string>
+type FetchArticleBody = Url -> AsyncResult<ArticleBody, string>
 
 type FetchSecImages = Section [] -> Stream<int * Image>
 
@@ -37,7 +37,7 @@ let private parseHtmlDoc (html : string) : AsyncResult<HtmlDocument, string> =
         Error <| "Could not parse html: " + ex.Message
     |> AsyncResult.ofResult
 
-let private getHead (doc : HtmlDocument) cssSelector =
+let private findNode (doc : HtmlDocument) cssSelector =
     doc.Html().CssSelect cssSelector
     |> List.tryHead
     |> Result.ofOption ("Could not select: " + cssSelector)
@@ -45,15 +45,15 @@ let private getHead (doc : HtmlDocument) cssSelector =
 
 let private attr name (node : HtmlNode) = node.AttributeValue name
 
-let private (|NormalArticle|SlideshowArticle|) (article : HtmlNode) =
-    let nodes = article.CssSelect "div#article_content"
+let private (|NormalArticle|SlideshowArticle|) (articleNode : HtmlNode) =
+    let nodes = articleNode.CssSelect "div#article_content"
     if nodes.IsEmpty then
-        NormalArticle article
+        NormalArticle articleNode
     else
         SlideshowArticle nodes.[0]
         
-let private parseNormalArticle (article : HtmlNode) = [|
-    for node in article.Elements () do
+let private parseNormalArticle (articleNode : HtmlNode) = [|
+    for node in articleNode.Elements () do
 
         if node.Name() = "p" && node.HasClass "Normal" then
             yield! node.InnerText() |> ParaString.Create |> Array.map Para
@@ -72,8 +72,8 @@ let private parseNormalArticle (article : HtmlNode) = [|
                 | None -> ()
 |]
 
-let private parseSlideshowArticle (article : HtmlNode) = [|
-    for node in article.Elements () do
+let private parseSlideshowArticle (articleNode : HtmlNode) = [|
+    for node in articleNode.Elements () do
 
         if node.Name() = "div" && node.HasClass "item_slide_show" then
             let imgUrl =
@@ -96,13 +96,13 @@ let private parseSections article =
     | NormalArticle node -> parseNormalArticle node
     | SlideshowArticle node -> parseSlideshowArticle node
 
-let fetchArticle (fetchString : FetchString) : FetchArticle =
+let fetchArticleBody (fetchString : FetchString) : FetchArticleBody =
     fun articleUrl -> asyncResult {
         let! htmlString = fetchString articleUrl
         let! doc = parseHtmlDoc htmlString
 
         let! article =
-            getHead doc "article.content_detail"
+            findNode doc "article.content_detail"
             |> AsyncResult.mapError (fun _ -> "Chưa hỗ trợ đọc bài viết dạng này")
 
         let sections = parseSections article
