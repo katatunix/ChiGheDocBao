@@ -1,4 +1,4 @@
-﻿module Utils
+module Utils
 
 open System.Collections.Concurrent
 
@@ -11,17 +11,17 @@ let hard times f x =
         | _ -> loop (count + 1)
     loop 1
 
-let memo (f : 'T -> Result<'U, 'V>) =
-    let cache = ConcurrentDictionary<'T, 'U> ()
-    fun t ->
-        match cache.TryGetValue t with
-        | true, u -> Ok u
+let memorize f =
+    let cache = ConcurrentDictionary<_, _> ()
+    fun a ->
+        match cache.TryGetValue a with
+        | true, b -> Ok b
         | _ ->
-            let result = f t
-            match result with
-            | Ok u -> cache.[t] <- u
+            let bResult = f a
+            match bResult with
+            | Ok b -> cache.[a] <- b
             | Error _ -> ()
-            result
+            bResult
 
 type SafeValue<'T> (initialValue : 'T) =
     let mutable value = initialValue

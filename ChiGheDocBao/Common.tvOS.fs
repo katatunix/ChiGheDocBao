@@ -1,4 +1,4 @@
-﻿module ChiGheDocBao.Common.tvOS
+module ChiGheDocBao.Common.tvOS
 
 open System
 open System.Threading
@@ -7,7 +7,7 @@ open Foundation
 open ChiGheDocBao
 open Common.Domain
 
-let cachedFetchImage : FetchImage = Common.Network.fetchImage |> Utils.memo
+let cachedFetchImage : FetchImage = Common.Network.fetchImage |> Utils.memorize
 
 let runOnViewThread (vc : UIViewController) f =
     fun x ->
@@ -53,7 +53,7 @@ let showToast (vc : UIViewController) content =
         ()
         |> runOnViewThread2 vc (fun _ ->
             let mre = new ManualResetEvent (false)
-            alert.DismissViewController (false, Action (fun _ -> mre.Set () |> ignore))
+            alert.DismissViewController (false, Action (mre.Set >> ignore))
             alert.Dispose ()
             awaitThenDispose mre
         )
@@ -62,7 +62,7 @@ let showToast (vc : UIViewController) content =
 let updateImage (image : Image option) (view : UIImageView) =
     match image with
     | Some (Image bytes) ->
-        view.Image <- UIImage.LoadFromData (NSData.FromArray bytes)
+        view.Image <- bytes |> NSData.FromArray |> UIImage.LoadFromData
     | None ->
         view.Image <- null
 

@@ -1,4 +1,4 @@
-﻿namespace global
+namespace global
 
 open System
 open System.Threading
@@ -21,7 +21,7 @@ module Stream =
     let create jobs map (items : seq<_>) =
         let enum = items.GetEnumerator ()
         let mutable index = 0
-        let still = SafeValue (true)
+        let still = SafeValue true
 
         let next () = lock enum <| fun _ ->
             if still.Value && enum.MoveNext () then
@@ -43,10 +43,12 @@ module Stream =
                         event.Trigger (index, item, result)
                         loop ()
             loop ()
-            
+
         let threads = Array.init jobs (fun _ -> Thread (ThreadStart threadWork))
-        {
+
+        let stream = {
             Observable = event.Publish
             Start = fun _ -> for thread in threads do thread.Start ()
             Stop = fun _ -> still.Value <- false
         }
+        stream

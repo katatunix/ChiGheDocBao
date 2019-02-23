@@ -1,4 +1,4 @@
-﻿module ChiGheDocBao.SeeArticleContent.Domain
+module ChiGheDocBao.SeeArticleContent.Domain
 
 open ChiGheDocBao
 open Common.Domain
@@ -37,11 +37,9 @@ let private parseHtmlDoc (html : string) : AsyncResult<HtmlDocument, string> =
         Error <| "Could not parse html: " + ex.Message
     |> AsyncResult.ofResult
 
-let private findNode (doc : HtmlDocument) cssSelector =
-    doc.Html().CssSelect cssSelector
-    |> List.tryHead
-    |> Result.ofOption ("Could not select: " + cssSelector)
-    |> AsyncResult.ofResult
+let private findArticleNode (doc : HtmlDocument) =
+    ["article.content_detail"; "div.fck_detail"]
+    |> List.tryPick (doc.Html().CssSelect >> List.tryHead)
 
 let private attr name (node : HtmlNode) = node.AttributeValue name
 
@@ -102,36 +100,35 @@ let fetchArticleBody (fetchString : FetchString) : FetchArticleBody =
         let! doc = parseHtmlDoc htmlString
 
         let! article =
-            findNode doc "article.content_detail"
-            |> AsyncResult.mapError (fun _ -> "Chưa hỗ trợ đọc bài viết dạng này")
-
-        let sections = parseSections article
-
-        return { Sections = sections }
+            findArticleNode doc
+            |> Result.ofOption "Chưa hỗ trợ đọc bài viết dạng này"
+            |> AsyncResult.ofResult
+            
+        return { Sections = parseSections article }
     }
 
 let fetchSecImages (fetchImage : FetchImage) : FetchSecImages =
     fun sections ->
-        let hardFetchImage = fetchImage |> Utils.hard 3
+        let fetchImageHardly = fetchImage |> Utils.hard 3
 
         let imageUrls =
             sections
-            |> Seq.mapi (fun i section -> i, section)
-            |> Seq.choose (fun (i, section) ->
+            |> Seq.mapi (fun sectionIndex section -> sectionIndex, section)
+            |> Seq.choose (fun (sectionIndex, section) ->
                 match section with
-                | SecImage url -> Some (i, url)
+                | SecImage url -> Some (sectionIndex, url)
                 | _ -> None
             )
 
         let stream =
             imageUrls
-            |> Stream.create 4 (fun (i, url) -> hardFetchImage url)
+            |> Stream.create 4 (fun (_, imageUrl) -> fetchImageHardly imageUrl)
 
         let imageObservable =
             stream.Observable
-            |> Observable.choose (fun (_, (i, _), imageResult) ->
+            |> Observable.choose (fun (_, (sectionIndex, _), imageResult) ->
                 match imageResult with
-                | Ok image -> Some (i, image)
+                | Ok image -> Some (sectionIndex, image)
                 | Error _ -> None
             )
 

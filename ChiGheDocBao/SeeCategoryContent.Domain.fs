@@ -1,4 +1,4 @@
-﻿module ChiGheDocBao.SeeCategoryContent.Domain
+module ChiGheDocBao.SeeCategoryContent.Domain
 
 open ChiGheDocBao
 open Common.Domain
@@ -73,10 +73,10 @@ let fetchArticleHeads (fetchString : FetchString) : FetchArticleHeads =
 
 let fetchThumbnails (fetchImage : FetchImage) : FetchThumbnails =
     fun articleHeads ->
-        let hardFetchImage = fetchImage |> Utils.hard 3
+        let fetchImageHardly = fetchImage |> Utils.hard 3
         let stream =
             articleHeads
-            |> Stream.create 4 (fun ah -> hardFetchImage ah.ImageUrl)
+            |> Stream.create 4 (fun ah -> fetchImageHardly ah.ImageUrl)
         let imageObservable =
             stream.Observable
             |> Observable.choose (fun (index, _, imageResult) ->
