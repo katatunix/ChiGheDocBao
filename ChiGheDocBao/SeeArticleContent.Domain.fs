@@ -49,7 +49,14 @@ let private (|NormalArticle|SlideshowArticle|) (articleNode : HtmlNode) =
         NormalArticle articleNode
     else
         SlideshowArticle nodes.[0]
-        
+
+let private parseImageUrl (imgNode : HtmlNode) =
+    ["src"; "data-original"]
+    |> List.tryPick (fun name ->
+        let value = imgNode |> attr name
+        if value.StartsWith "http" then Some (Url value) else None
+    )
+
 let private parseNormalArticle (articleNode : HtmlNode) = [|
     for node in articleNode.Elements () do
 
@@ -62,12 +69,17 @@ let private parseNormalArticle (articleNode : HtmlNode) = [|
         elif node.Name() = "table" && node.HasClass "tplCaption" then
             let imgs = node.CssSelect "img"
             if not imgs.IsEmpty then
-                let img = imgs.[0]
-                yield SecImage <| Url (attr "src" img)
-
-                match node.CssSelect "p.Image" |> List.tryHead with
-                | Some node -> yield! node.InnerText() |> ParaString.Create |> Array.map Caption
+                match parseImageUrl imgs.[0] with
                 | None -> ()
+                | Some url ->
+                    yield SecImage url
+                    match node.CssSelect "p.Image" |> List.tryHead with
+                    | Some node -> yield! node.InnerText() |> ParaString.Create |> Array.map Caption
+                    | None -> ()
+
+        elif node.Name() = "div" && node.HasClass "box_tableinsert" then
+            for pNode in node.CssSelect "p.Normal" do
+                yield! pNode.InnerText() |> ParaString.Create |> Array.map Para
 |]
 
 let private parseSlideshowArticle (articleNode : HtmlNode) = [|
