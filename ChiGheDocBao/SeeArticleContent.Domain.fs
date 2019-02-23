@@ -30,18 +30,15 @@ type FetchSecImages = Section [] -> Stream<int * Image>
 
 open FSharp.Data
 
-let private parseHtmlDoc (html : string) : AsyncResult<HtmlDocument, string> =
+let private parseHtmlDoc (html : string) =
     try
         Ok <| HtmlDocument.Parse html
     with ex ->
         Error <| "Could not parse html: " + ex.Message
-    |> AsyncResult.ofResult
 
 let private findArticleNode (doc : HtmlDocument) =
     ["article.content_detail"; "div.fck_detail"]
     |> List.tryPick (doc.Html().CssSelect >> List.tryHead)
-
-let private attr name (node : HtmlNode) = node.AttributeValue name
 
 let private (|NormalArticle|SlideshowArticle|) (articleNode : HtmlNode) =
     let nodes = articleNode.CssSelect "div#article_content"
@@ -49,6 +46,8 @@ let private (|NormalArticle|SlideshowArticle|) (articleNode : HtmlNode) =
         NormalArticle articleNode
     else
         SlideshowArticle nodes.[0]
+
+let private attr name (node : HtmlNode) = node.AttributeValue name
 
 let private parseImageUrl (imgNode : HtmlNode) =
     ["src"; "data-original"]
@@ -111,7 +110,7 @@ let private parseSections article =
 let fetchArticleBody (fetchString : FetchString) : FetchArticleBody =
     fun articleUrl -> asyncResult {
         let! htmlString = fetchString articleUrl
-        let! doc = parseHtmlDoc htmlString
+        let! doc = parseHtmlDoc htmlString |> AsyncResult.ofResult
 
         let! article =
             findArticleNode doc
