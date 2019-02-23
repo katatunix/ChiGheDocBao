@@ -60,11 +60,11 @@ let private parseImageUrl (imgNode : HtmlNode) =
 let private parseNormalArticle (articleNode : HtmlNode) = [|
     for node in articleNode.Elements () do
 
-        if node.Name() = "p" && node.HasClass "Normal" then
-            yield! node.InnerText() |> ParaString.Create |> Array.map Para
-
-        elif node.Name() = "p" && node.HasClass "subtitle" then
+        if node.Name() = "p" && node.HasClass "subtitle" then
             yield! node.InnerText() |> ParaString.Create |> Array.map Subtitle
+
+        elif node.Name() = "p" then
+            yield! node.InnerText() |> ParaString.Create |> Array.map Para
 
         elif node.Name() = "table" && node.HasClass "tplCaption" then
             let imgs = node.CssSelect "img"
@@ -78,8 +78,8 @@ let private parseNormalArticle (articleNode : HtmlNode) = [|
                     | None -> ()
 
         elif node.Name() = "div" && node.HasClass "box_tableinsert" then
-            for pNode in node.CssSelect "p.Normal" do
-                yield! pNode.InnerText() |> ParaString.Create |> Array.map Para
+            for p in node.CssSelect "p" do
+                yield! p.InnerText() |> ParaString.Create |> Array.map Para
 |]
 
 let private parseSlideshowArticle (articleNode : HtmlNode) = [|
