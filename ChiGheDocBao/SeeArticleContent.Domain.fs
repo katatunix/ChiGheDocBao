@@ -89,8 +89,10 @@ let private parseSlideshowArticle (articleNode : HtmlNode) = [|
             let imgUrl =
                 node.CssSelect ".block_thumb_slide_show > img"
                 |> List.tryHead
-                |> Option.map (attr "data-original")
-            match imgUrl with Some x -> yield SecImage (Url x) | None -> ()
+                |> Option.bind parseImageUrl
+            match imgUrl with
+            | Some url -> yield SecImage url
+            | None -> ()
 
             match node.CssSelect ".desc_cation" |> List.tryHead with
             | Some node ->
