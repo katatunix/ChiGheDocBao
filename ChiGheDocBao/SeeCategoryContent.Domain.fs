@@ -68,7 +68,8 @@ let fetchArticleHeads (fetchString : FetchString) : FetchArticleHeads =
         asyncResult {
             let! xmlString = fetchString categoryUrl
             let! rss = parseXml xmlString |> AsyncResult.ofResult
-            return! parseArticleHeads rss |> AsyncResult.ofSuccess
+            let! ahs = parseArticleHeads rss |> AsyncResult.ofSuccess
+            return ahs |> Array.sortByDescending (fun ah -> ah.DateTime)
         }
 
 let fetchThumbnails (fetchImage : FetchImage) : FetchThumbnails =
