@@ -1,4 +1,4 @@
-module ChiGheDocBao.SeeCategoryContent.Domain
+module ChiGheDocBao.Category.Domain
 
 open ChiGheDocBao
 open Common.Domain

@@ -1,4 +1,4 @@
-namespace ChiGheDocBao.SeeCategoryCatalog
+namespace ChiGheDocBao.Home
 
 open ChiGheDocBao
 
@@ -79,6 +79,6 @@ module tvOS =
 
             member this.ShowCategoryContent category =
                 let vc = this.Storyboard.InstantiateViewController "CategoryContentView"
-                            :?> SeeCategoryContent.tvOS.tvOSCategoryContentView
+                            :?> Category.tvOS.tvOSCategoryContentView
                 vc.Inject category
                 this.NavigationController.PushViewController (vc, false)

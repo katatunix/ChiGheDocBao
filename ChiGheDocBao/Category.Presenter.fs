@@ -1,4 +1,4 @@
-﻿module ChiGheDocBao.SeeCategoryContent.Presenter
+﻿module ChiGheDocBao.Category.Presenter
 
 open System
 open System.Collections.Concurrent

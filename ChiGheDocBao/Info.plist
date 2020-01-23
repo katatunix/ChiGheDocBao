@@ -9,9 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.nghiabui.ChiGheDocBao</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>MinimumOSVersion</key>
 	<string>12.1</string>
 	<key>UIDeviceFamily</key>
@@ -28,5 +26,7 @@
 	<string>Assets.xcassets/App Icon &amp; Top Shelf Image.brandassets</string>
 	<key>XSLaunchImageAssets</key>
 	<string>Assets.xcassets/LaunchImages.launchimage</string>
+	<key>CFBundleVersion</key>
+	<string>20200123</string>
 </dict>
 </plist>

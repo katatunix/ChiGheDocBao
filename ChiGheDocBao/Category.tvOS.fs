@@ -1,4 +1,4 @@
-﻿module ChiGheDocBao.SeeCategoryContent.tvOS
+﻿module ChiGheDocBao.Category.tvOS
 
 open System
 open Foundation
@@ -84,6 +84,6 @@ type tvOSCategoryContentView (handle : IntPtr) =
 
         member this.ShowArticleContent articleHead =
             let vc = this.Storyboard.InstantiateViewController "ArticleContentView"
-                        :?> SeeArticleContent.tvOS.tvOSArticleContentView
+                        :?> Article.tvOS.tvOSArticleContentView
             vc.Inject articleHead
             this.NavigationController.PushViewController (vc, false)

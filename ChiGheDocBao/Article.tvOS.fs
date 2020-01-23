@@ -1,4 +1,4 @@
-﻿module ChiGheDocBao.SeeArticleContent.tvOS
+﻿module ChiGheDocBao.Article.tvOS
 
 open System
 open Foundation

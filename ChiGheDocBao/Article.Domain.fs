@@ -1,4 +1,4 @@
-module ChiGheDocBao.SeeArticleContent.Domain
+module ChiGheDocBao.Article.Domain
 
 open ChiGheDocBao
 open Common.Domain
