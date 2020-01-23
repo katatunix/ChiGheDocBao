@@ -66,14 +66,14 @@
     <Compile Include="..\ChiGheDocBao\Common.Network.fs">
       <Link>Common.Network.fs</Link>
     </Compile>
-    <Compile Include="..\ChiGheDocBao\SeeArticleContent.Domain.fs">
-      <Link>SeeArticleContent.Domain.fs</Link>
+    <Compile Include="..\ChiGheDocBao\Article.Domain.fs">
+      <Link>Article.Domain.fs</Link>
     </Compile>
-    <Compile Include="..\ChiGheDocBao\SeeCategoryContent.Domain.fs">
-      <Link>SeeCategoryContent.Domain.fs</Link>
+    <Compile Include="..\ChiGheDocBao\Category.Domain.fs">
+      <Link>Category.Domain.fs</Link>
     </Compile>
-    <Compile Include="Test.SeeCategoryContent.Domain.fs" />
-    <Compile Include="Test.SeeArticleContent.Domain.fs" />
+    <Compile Include="CategoryDomainTest.fs" />
+    <Compile Include="ArticleDomainTest.fs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(FSharpTargetsPath)" />

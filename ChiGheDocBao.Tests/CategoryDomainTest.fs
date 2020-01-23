@@ -1,10 +1,10 @@
-module ChiGheDocBao.Tests.ViewCategory.Domain
+module ChiGheDocBao.CategoryDomainTest
 
 open NUnit.Framework
 open FsUnit
 open ChiGheDocBao
 open Common.Domain
-open SeeCategoryContent.Domain
+open Category.Domain
 
 [<Test>]
 let ``test fetchArticleHeads`` () =

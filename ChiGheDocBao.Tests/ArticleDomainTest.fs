@@ -1,9 +1,9 @@
-﻿module ChiGheDocBao.Tests.SeeArticleContent.Domain
+﻿module ChiGheDocBao.ArticleDomainTest
 
 open NUnit.Framework
 open ChiGheDocBao
 open Common.Domain
-open SeeArticleContent.Domain
+open Article.Domain
 
 [<Test>]
 let ``test fetchArticleBody`` ()  =
