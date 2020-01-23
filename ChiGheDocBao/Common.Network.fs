@@ -8,8 +8,7 @@ open Common.Domain
 let fetchString : FetchString = fun (Url url) ->
     async {
         try
-            //let! str = Http.AsyncRequestString (url, timeout = 10000, responseEncodingOverride = "UTF-8")
-            let! str = Http.AsyncRequestString (url, timeout = 10000)
+            let! str = Http.AsyncRequestString (url, timeout = 10000, responseEncodingOverride = "UTF-8")
             return Ok str
         with ex ->
             return Error ex.Message
