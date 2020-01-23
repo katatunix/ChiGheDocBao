@@ -1,13 +1,9 @@
-module ChiGheDocBao.Common.tvOS
+module ChiGheDocBao.ViewCommon
 
 open System
 open System.Threading
 open UIKit
 open Foundation
-open ChiGheDocBao
-open Common.Domain
-
-let cachedFetchImage : FetchImage = Common.Network.fetchImage |> Utils.memorize
 
 let runOnViewThread (vc : UIViewController) f =
     fun x ->

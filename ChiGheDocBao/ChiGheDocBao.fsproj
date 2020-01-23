@@ -128,16 +128,12 @@
     <Compile Include="Result.fs" />
     <Compile Include="Utils.fs" />
     <Compile Include="Stream.fs" />
-    <Compile Include="Common.Domain.fs" />
-    <Compile Include="Common.Network.fs" />
-    <Compile Include="Common.tvOS.fs" />
-    <Compile Include="Article.Domain.fs" />
-    <Compile Include="Article.Presenter.fs" />
-    <Compile Include="Article.tvOS.fs" />
-    <Compile Include="Category.Domain.fs" />
-    <Compile Include="Category.Presenter.fs" />
-    <Compile Include="Category.tvOS.fs" />
-    <Compile Include="Home.fs" />
+    <Compile Include="Common.fs" />
+    <Compile Include="Network.fs" />
+    <Compile Include="ViewCommon.fs" />
+    <Compile Include="ArticlePage.fs" />
+    <Compile Include="CategoryPage.fs" />
+    <Compile Include="HomePage.fs" />
     <Compile Include="AppDelegate.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿module ChiGheDocBao.Common.Domain
+﻿[<AutoOpen>]
+module ChiGheDocBao.Common
 
 open System
 

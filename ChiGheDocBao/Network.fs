@@ -1,9 +1,8 @@
-﻿module ChiGheDocBao.Common.Network
+﻿module ChiGheDocBao.Network
 
 open System
 open FSharp.Data
 open ChiGheDocBao
-open Common.Domain
 
 let fetchString : FetchString = fun (Url url) ->
     async {
@@ -22,4 +21,5 @@ let fetchImage : FetchImage = fun (Url url) ->
         | Binary bytes -> Ok <| Image bytes
     with ex ->
         Error ex.Message
-        
+
+let fetchImage_Cached : FetchImage = Utils.memorize fetchImage
