@@ -28,5 +28,7 @@
 	<string>Assets.xcassets/LaunchImages.launchimage</string>
 	<key>CFBundleVersion</key>
 	<string>20200123</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

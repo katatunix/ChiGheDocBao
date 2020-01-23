@@ -22,3 +22,4 @@ let fetchImage : FetchImage = fun (Url url) ->
         | Binary bytes -> Ok <| Image bytes
     with ex ->
         Error ex.Message
+        
