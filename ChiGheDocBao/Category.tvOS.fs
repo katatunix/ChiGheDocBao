@@ -13,19 +13,19 @@ type ArticleHeadCell (handle : IntPtr) =
     [<Outlet>] member val DescriptionLabel : UILabel = null with get, set
     [<Outlet>] member val Thumbnail : UIImageView = null with get, set
 
-[<Register ("CategoryContentView")>]
-type tvOSCategoryContentView (handle : IntPtr) =
+[<Register ("CategoryView")>]
+type tvOSCategoryView (handle : IntPtr) =
     inherit UITableViewController (handle)
 
     let mutable category : Common.Domain.Category option = None
-    let mutable presenter : CategoryContentPresenter = null
+    let mutable presenter : CategoryPresenter = null
 
     member this.Inject cat =
         category <- Some cat
 
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
-        presenter <- CategoryContentPresenter (category.Value,
+        presenter <- CategoryPresenter (category.Value,
                                                Domain.fetchArticleHeads Common.Network.fetchString,
                                                Domain.fetchThumbnails Common.tvOS.cachedFetchImage,
                                                this)
@@ -56,7 +56,7 @@ type tvOSCategoryContentView (handle : IntPtr) =
         if not (isNull presenter) then
             presenter.OnBack ()
 
-    interface CategoryContentView with
+    interface CategoryView with
 
         member this.ShowLoading message =
             Common.tvOS.showToast this message
@@ -82,8 +82,8 @@ type tvOSCategoryContentView (handle : IntPtr) =
                         this.BuildCell cell |> ignore
             )
 
-        member this.ShowArticleContent articleHead =
+        member this.NavigateToArticle articleHead =
             let vc = this.Storyboard.InstantiateViewController "ArticleContentView"
-                        :?> Article.tvOS.tvOSArticleContentView
+                        :?> Article.tvOS.tvOSArticleView
             vc.Inject articleHead
             this.NavigationController.PushViewController (vc, false)

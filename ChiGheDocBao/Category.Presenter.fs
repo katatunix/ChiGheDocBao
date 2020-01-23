@@ -12,20 +12,19 @@ type ArticleHeadViewModel = {
     Image : Image option
 }
 
-type CategoryContentView =
+type CategoryView =
     abstract ShowLoading : message:string -> Async<Async<unit>>
     abstract ShowError : title:string -> content:string -> Async<unit>
     abstract Back : unit -> unit
     abstract RefreshAllCells : unit -> unit
     abstract RefreshCell : int -> unit
-    abstract ShowArticleContent : ArticleHead -> unit
+    abstract NavigateToArticle : ArticleHead -> unit
 
 [<AllowNullLiteral>]
-type CategoryContentPresenter (category : Category,
-                               fetchArticleHeads : FetchArticleHeads,
-                               fetchThumbnails : FetchThumbnails,
-                               view : CategoryContentView) =
-
+type CategoryPresenter (category : Category,
+                        fetchArticleHeads : FetchArticleHeads,
+                        fetchThumbnails : FetchThumbnails,
+                        view : CategoryView) =
     let mutable articleHeads : ArticleHead [] = Array.empty
     let thumbnails = ConcurrentDictionary<int, Image> ()
     let mutable stopFetchingThumbnails = id
@@ -66,7 +65,7 @@ type CategoryContentPresenter (category : Category,
         vm
 
     member this.OnCellSelected index =
-        view.ShowArticleContent articleHeads.[index]
+        view.NavigateToArticle articleHeads.[index]
 
     member this.OnBack () =
         stopFetchingThumbnails ()

@@ -6,7 +6,7 @@ open ChiGheDocBao
 open Common.Domain
 open Domain
 
-type ArticleContentView =
+type ArticleView =
     abstract ShowLoading : message:string -> Async<Async<unit>>
     abstract ShowError : title:string -> content:string -> Async<unit>
     abstract Back : unit -> unit
@@ -22,11 +22,10 @@ type CellViewModel =
     | Subtitle of string
 
 [<AllowNullLiteral>]
-type ArticleContentPresenter (articleHead : ArticleHead,
-                              fetchArticleBody : FetchArticleBody,
-                              fetchSecImages : FetchSecImages,
-                              view : ArticleContentView) =
-
+type ArticlePresenter (articleHead : ArticleHead,
+                       fetchArticleBody : FetchArticleBody,
+                       fetchSecImages : FetchSecImages,
+                       view : ArticleView) =
     let mutable articleBody : ArticleBody option = None
     let secImages = ConcurrentDictionary<int, Image> ()
     let mutable stopFetchingSecImages = id

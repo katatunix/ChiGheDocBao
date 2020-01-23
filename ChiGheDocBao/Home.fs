@@ -35,17 +35,17 @@ module Presenter =
 
     open Common.Domain
 
-    type CategoryCatalogView =
-        abstract member ShowCategoryContent : Category -> unit
+    type HomeView =
+        abstract member NavigateToCategory : Category -> unit
 
     [<AllowNullLiteral>]
-    type CategoryCatalogPresenter (view : CategoryCatalogView) =
+    type HomePresenter (view : HomeView) =
         member this.Count = Domain.categories.Length
 
         member this.GetCategoryName index = Domain.categories.[index].Name
 
         member this.OnCategorySelected index =
-            view.ShowCategoryContent Domain.categories.[index]
+            view.NavigateToCategory Domain.categories.[index]
 
 module tvOS =
 
@@ -54,15 +54,15 @@ module tvOS =
     open UIKit
     open Presenter
 
-    [<Register ("CategoryCatalogView")>]
-    type tvOSCategoryCatalogView (handle : IntPtr) =
+    [<Register ("HomeView")>]
+    type tvOSHomeView (handle : IntPtr) =
         inherit UITableViewController (handle)
 
-        let mutable presenter : CategoryCatalogPresenter = null
+        let mutable presenter : HomePresenter = null
 
         override this.ViewDidLoad () =
             base.ViewDidLoad ()
-            presenter <- CategoryCatalogPresenter (this)
+            presenter <- HomePresenter (this)
 
         override this.RowsInSection (tableView, section) =
             presenter.Count |> nint
@@ -75,10 +75,10 @@ module tvOS =
         override this.RowSelected (tableView, indexPath) =
             presenter.OnCategorySelected indexPath.Row
 
-        interface CategoryCatalogView with
+        interface HomeView with
 
-            member this.ShowCategoryContent category =
+            member this.NavigateToCategory category =
                 let vc = this.Storyboard.InstantiateViewController "CategoryContentView"
-                            :?> Category.tvOS.tvOSCategoryContentView
+                            :?> Category.tvOS.tvOSCategoryView
                 vc.Inject category
                 this.NavigationController.PushViewController (vc, false)

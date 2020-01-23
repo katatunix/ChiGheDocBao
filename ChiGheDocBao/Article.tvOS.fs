@@ -37,19 +37,19 @@ type CaptionCell (handle : IntPtr) =
     inherit Common.tvOS.IndexCell (handle)
     [<Outlet>] member val Label : UILabel = null with get, set
 
-[<Register ("ArticleContentView")>]
-type tvOSArticleContentView (handle : IntPtr) =
+[<Register ("ArticleView")>]
+type tvOSArticleView (handle : IntPtr) =
     inherit UITableViewController (handle)
 
     let mutable articleHead : Common.Domain.ArticleHead option = None
-    let mutable presenter : ArticleContentPresenter = null
+    let mutable presenter : ArticlePresenter = null
 
     member this.Inject ah =
         articleHead <- Some ah
 
     override this.ViewDidLoad () =
         base.ViewDidLoad ()
-        presenter <- ArticleContentPresenter (articleHead.Value,
+        presenter <- ArticlePresenter (articleHead.Value,
                                               Domain.fetchArticleBody Common.Network.fetchString,
                                               Domain.fetchSecImages Common.tvOS.cachedFetchImage,
                                               this)
@@ -94,7 +94,7 @@ type tvOSArticleContentView (handle : IntPtr) =
         if not (isNull presenter) then
             presenter.OnBack ()
 
-    interface ArticleContentView with
+    interface ArticleView with
 
         member this.ShowLoading message =
             Common.tvOS.showToast this message
