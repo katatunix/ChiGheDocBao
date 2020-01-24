@@ -81,10 +81,9 @@ let private parseSlideshowArticle (articleNode : HtmlNode) = [|
     for node in articleNode.Elements () do
 
         if node.Name() = "div" && node.HasClass "item_slide_show" then
-            let styles = [ "block_thumb_slide_show"; "block_thumb_slide_show_image" ]
             let imgUrl =
-                styles
-                |> Seq.tryPick (fun style -> node.CssSelect (sprintf ".%s > img" style) |> List.tryHead)
+                [ "block_thumb_slide_show"; "block_thumb_slide_show_image" ]
+                |> List.tryPick (sprintf ".%s > img" >> node.CssSelect >> List.tryHead)
                 |> Option.bind parseImageUrl
             match imgUrl with
             | Some url -> yield SecImage url
