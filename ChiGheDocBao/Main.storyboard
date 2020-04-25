@@ -71,14 +71,14 @@
                                     <rect key="frame" x="0.0" y="0.0" width="1708" height="232"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="8394" translatesAutoresizingMaskIntoConstraints="NO" clipsSubviews="YES">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="8394" translatesAutoresizingMaskIntoConstraints="NO" clipsSubviews="YES" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250">
                                             <rect key="frame" x="0.0" y="0.0" width="300" height="232"/>
-                                            <constraints>
-                                                <constraint id="8396" firstAttribute="width" constant="300"/>
-                                            </constraints>
                                             <color key="backgroundColor" colorSpace="calibratedWhite" white="0" alpha="1"/>
+                                            <constraints>
+                                                <constraint id="20583" firstAttribute="width" constant="300"/>
+                                            </constraints>
                                         </imageView>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" id="9214" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" id="9214" translatesAutoresizingMaskIntoConstraints="NO" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000">
                                             <rect key="frame" x="316" y="8" width="1376" height="216"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="300" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5824" translatesAutoresizingMaskIntoConstraints="NO" numberOfLines="0" verticalCompressionResistancePriority="800" text="Title">
