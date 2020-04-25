@@ -33,10 +33,10 @@ let private parseHtmlDoc (html : string) =
         Error <| "Could not parse html: " + ex.Message
 
 let private findArticleNode (doc : HtmlDocument) =
-    ["article.content_detail"; "div.fck_detail"]
+    ["article.content_detail"; "div.fck_detail"; "article.fck_detail"]
     |> List.tryPick (doc.Html().CssSelect >> List.tryHead)
 
-let private (|NormalArticle|SlideshowArticle|) (articleNode : HtmlNode) =
+let private (| NormalArticle | SlideshowArticle |) (articleNode : HtmlNode) =
     let nodes = articleNode.CssSelect "div#article_content"
     if nodes.IsEmpty then
         NormalArticle articleNode
@@ -45,7 +45,7 @@ let private (|NormalArticle|SlideshowArticle|) (articleNode : HtmlNode) =
 
 let private attr name (node : HtmlNode) = node.AttributeValue name
 
-let private parseImageUrl (imgNode : HtmlNode) =
+let private parseImageUrl (imgNode: HtmlNode) =
     ["src"; "data-original"]
     |> List.tryPick (fun name ->
         let value = imgNode |> attr name
@@ -75,6 +75,22 @@ let private parseNormalArticle (articleNode : HtmlNode) = [|
         elif node.Name() = "div" && node.HasClass "box_tableinsert" then
             for p in node.CssSelect "p" do
                 yield! p.InnerText() |> ParaString.Create |> Array.map Para
+
+        elif node.Name() = "figure" then
+            match node.CssSelect "meta" |> List.tryHead with
+            | Some meta -> yield meta |> attr "content" |> Url |> SecImage
+            | None -> ()
+
+            match node.CssSelect "div.fig-picture img" |> List.tryHead with
+            | Some img ->
+                match parseImageUrl img with
+                | Some url -> yield SecImage url
+                | None -> ()
+            | None -> ()
+
+            match node.CssSelect "figcaption p.Image" |> List.tryHead with
+            | Some p -> yield! p.InnerText() |> ParaString.Create |> Array.map Caption
+            | None -> ()
 |]
 
 let private parseSlideshowArticle (articleNode : HtmlNode) = [|
@@ -263,7 +279,7 @@ type CaptionCell (handle : IntPtr) =
 
 [<Register ("ArticleViewController")>]
 type ViewImpl (handle : IntPtr) =
-    inherit UITableViewController (handle)
+    inherit ViewCommon.EstimatedTableViewController (handle)
 
     let mutable articleHead : ArticleHead option = None
     let mutable presenter : Presenter = null
