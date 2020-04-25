@@ -9,7 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.nghiabui.ChiGheDocBao</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>MinimumOSVersion</key>
 	<string>12.1</string>
 	<key>UIDeviceFamily</key>
@@ -27,7 +27,7 @@
 	<key>XSLaunchImageAssets</key>
 	<string>Assets.xcassets/LaunchImages.launchimage</string>
 	<key>CFBundleVersion</key>
-	<string>20200123</string>
+	<string>20200425</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 </dict>
