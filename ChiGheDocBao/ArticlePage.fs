@@ -36,17 +36,18 @@ let private findArticleNode (doc : HtmlDocument) =
     ["article.content_detail"; "div.fck_detail"; "article.fck_detail"]
     |> List.tryPick (doc.Html().CssSelect >> List.tryHead)
 
-let private (| NormalArticle | SlideshowArticle |) (articleNode : HtmlNode) =
-    let nodes = articleNode.CssSelect "div#article_content"
-    if nodes.IsEmpty then
-        NormalArticle articleNode
+let private (| NormalArticle | SlideshowArticle |) (articleNode: HtmlNode) =
+    if articleNode.CssSelect("div.item_slide_show").Length > 0 then
+        SlideshowArticle articleNode
     else
-        SlideshowArticle nodes.[0]
+        match articleNode.CssSelect "div#article_content" |> List.tryHead with
+        | Some node -> SlideshowArticle node
+        | None -> NormalArticle articleNode
 
 let private attr name (node : HtmlNode) = node.AttributeValue name
 
 let private parseImageUrl (imgNode: HtmlNode) =
-    ["src"; "data-original"]
+    ["src"; "data-original"; "data-src"]
     |> List.tryPick (fun name ->
         let value = imgNode |> attr name
         if value.StartsWith "http" then Some (Url value) else None
@@ -77,29 +78,24 @@ let private parseNormalArticle (articleNode : HtmlNode) = [|
                 yield! p.InnerText() |> ParaString.Create |> Array.map Para
 
         elif node.Name() = "figure" then
-            match node.CssSelect "meta" |> List.tryHead with
-            | Some meta -> yield meta |> attr "content" |> Url |> SecImage
+            let secImage = node.CssSelect "div.fig-picture img" |> List.tryHead
+                           |> Option.bind parseImageUrl
+                           |> Option.map SecImage
+            match secImage with
             | None -> ()
-
-            match node.CssSelect "div.fig-picture img" |> List.tryHead with
-            | Some img ->
-                match parseImageUrl img with
-                | Some url -> yield SecImage url
+            | Some si ->
+                yield si
+                match node.CssSelect "figcaption p.Image" |> List.tryHead with
                 | None -> ()
-            | None -> ()
-
-            match node.CssSelect "figcaption p.Image" |> List.tryHead with
-            | Some p -> yield! p.InnerText() |> ParaString.Create |> Array.map Caption
-            | None -> ()
+                | Some p -> yield! p.InnerText() |> ParaString.Create |> Array.map Caption
 |]
 
 let private parseSlideshowArticle (articleNode : HtmlNode) = [|
     for node in articleNode.Elements () do
-
         if node.Name() = "div" && node.HasClass "item_slide_show" then
             let imgUrl =
                 [ "block_thumb_slide_show"; "block_thumb_slide_show_image" ]
-                |> List.tryPick (sprintf ".%s > img" >> node.CssSelect >> List.tryHead)
+                |> List.tryPick (sprintf ".%s img" >> node.CssSelect >> List.tryHead)
                 |> Option.bind parseImageUrl
             match imgUrl with
             | Some url -> yield SecImage url
@@ -134,7 +130,7 @@ let fetchArticleBody (fetchString : FetchString) : FetchArticleBody =
 
 let fetchSecImages (fetchImage : FetchImage) : FetchSecImages =
     fun sections ->
-        let fetchImageHardly = fetchImage |> Utils.hard 3
+        let fetchImageHardly = fetchImage |> hard 3
 
         let imageUrls =
             sections
@@ -279,7 +275,7 @@ type CaptionCell (handle : IntPtr) =
 
 [<Register ("ArticleViewController")>]
 type ViewImpl (handle : IntPtr) =
-    inherit ViewCommon.EstimatedTableViewController (handle)
+    inherit UITableViewController (handle)
 
     let mutable articleHead : ArticleHead option = None
     let mutable presenter : Presenter = null

@@ -2,7 +2,6 @@ namespace global
 
 open System
 open System.Threading
-open Utils
 
 type Stream<'T> = {
     Observable : IObservable<'T>

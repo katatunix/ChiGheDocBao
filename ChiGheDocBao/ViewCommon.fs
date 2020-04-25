@@ -62,18 +62,18 @@ let updateImage (image : Image option) (view : UIImageView) =
     | None ->
         view.Image <- null
 
-type EstimatedTableViewController (handle : IntPtr) =
-    inherit UITableViewController (handle)
+//type EstimatedTableViewController (handle : IntPtr) =
+    //inherit UITableViewController (handle)
 
-    let heightCache = Collections.Generic.Dictionary<int, nfloat> ()
+    //let heightCache = Collections.Generic.Dictionary<int, nfloat> ()
 
-    override this.WillDisplay (tv, cell, indexPath) =
-        heightCache.[indexPath.Row] <- cell.Frame.Size.Height
+    //override this.WillDisplay (tv, cell, indexPath) =
+    //    heightCache.[indexPath.Row] <- cell.Frame.Size.Height
 
-    override this.EstimatedHeight (tv, indexPath) =
-        match heightCache.TryGetValue indexPath.Row with
-        | true, height -> height
-        | _ -> UITableView.AutomaticDimension
+    //override this.EstimatedHeight (tv, indexPath) =
+        //match heightCache.TryGetValue indexPath.Row with
+        //| true, height -> height
+        //| _ -> UITableView.AutomaticDimension
         
 type IndexCell (handle : IntPtr) =
     inherit UITableViewCell (handle)

@@ -22,4 +22,4 @@ let fetchImage : FetchImage = fun (Url url) ->
     with ex ->
         Error ex.Message
 
-let fetchImage_Cached : FetchImage = Utils.memorize fetchImage
+let fetchImage_Cached : FetchImage = memorize fetchImage

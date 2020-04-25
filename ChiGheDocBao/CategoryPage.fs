@@ -39,7 +39,7 @@ let private parseDescription description =
         Error <| "Invalid description: " + description
 
 let private parseArticleHead (item : XmlDoc.Item) =
-    result {
+    trial {
         let! imageUrl, description = parseDescription item.Description
         return {
             Title = item.Title
@@ -64,7 +64,7 @@ let fetchArticleHeads (fetchString : FetchString) categoryUrl =
     }
 
 let fetchThumbnails (fetchImage : FetchImage) articleHeads =
-    let fetchImageHardly = fetchImage |> Utils.hard 3
+    let fetchImageHardly = fetchImage |> hard 3
     let stream =
         articleHeads
         |> Stream.create 4 (fun ah -> fetchImageHardly ah.ImageUrl)

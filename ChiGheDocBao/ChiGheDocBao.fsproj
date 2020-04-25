@@ -125,8 +125,7 @@
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <InterfaceDefinition Include="Main.storyboard" />
-    <Compile Include="Result.fs" />
-    <Compile Include="Utils.fs" />
+    <Compile Include="FsCommon.fs" />
     <Compile Include="Stream.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Network.fs" />
@@ -136,6 +135,7 @@
     <Compile Include="HomePage.fs" />
     <Compile Include="AppDelegate.fs" />
     <Compile Include="Main.fs" />
+    
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.FSharp.targets" />
 </Project>
