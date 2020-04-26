@@ -43,7 +43,7 @@
     <GenerateTailCalls>true</GenerateTailCalls>
     <PlatformTarget>x86</PlatformTarget>
     <CodesignProvision>VS: tvOS WildCard Development</CodesignProvision>
-    <MtouchExtraArgs>--bitcode=asmonly</MtouchExtraArgs>
+    <MtouchExtraArgs>--bitcode=asmonly --linkskip=FSharp.Core</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
