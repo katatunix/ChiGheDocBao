@@ -264,7 +264,7 @@ module Async =
             // should be started on the current synchronization context
             works |> Seq.iteri (fun index work -> Async.StartImmediate <| run index work)
 
-    let withTimeout timeMs work =
+    let withTimeout (timeMs:int) work =
         let success = async {
             let! x = work
             return Some x
@@ -349,7 +349,7 @@ module AsyncResult =
     //-----------------------------------
     // Utilities lifted from Async
 
-    let sleep ms = 
+    let sleep (ms:int) = 
         Async.Sleep ms |> ofAsync
 
 // ======================================================================================================
