@@ -32,18 +32,16 @@
     <OutputPath>bin\iPhone\Release</OutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodesignKey>Apple Development: Nghia Bui Van (2W8CLWKRH4)</CodesignKey>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchFloat32>true</MtouchFloat32>
-    <MtouchEnableBitcode>true</MtouchEnableBitcode>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchLink>Full</MtouchLink>
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <GenerateTailCalls>true</GenerateTailCalls>
     <PlatformTarget>x86</PlatformTarget>
-    <CodesignProvision>VS: tvOS WildCard Development</CodesignProvision>
     <MtouchExtraArgs>--bitcode=asmonly --linkskip=FSharp.Core</MtouchExtraArgs>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
@@ -65,7 +63,7 @@
     <OutputPath>bin\iPhone\Debug</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodesignKey>Apple Development: Nghia Bui Van (2W8CLWKRH4)</CodesignKey>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <MtouchDebug>true</MtouchDebug>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
@@ -77,7 +75,6 @@
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <PlatformTarget>x86</PlatformTarget>
-    <CodesignProvision>VS: tvOS WildCard Development</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -86,12 +83,6 @@
     <Reference Include="System.Numerics" />
     <Reference Include="mscorlib" />
     <Reference Include="Xamarin.TVOS" />
-    <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.4.7.1\lib\netstandard2.0\FSharp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.Data">
-      <HintPath>..\packages\FSharp.Data.3.3.3\lib\netstandard2.0\FSharp.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
@@ -121,7 +112,6 @@
     <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\Contents.json" />
     <ImageAsset Include="Assets.xcassets\Contents.json" />
     <None Include="app.config" />
-    <None Include="packages.config" />
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <InterfaceDefinition Include="Main.storyboard" />
@@ -136,6 +126,10 @@
     <Compile Include="AppDelegate.fs" />
     <Compile Include="Main.fs" />
     
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.7.2" />
+    <PackageReference Include="FSharp.Data" Version="3.3.3" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.FSharp.targets" />
 </Project>
